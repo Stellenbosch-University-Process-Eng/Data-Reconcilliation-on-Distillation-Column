@@ -30,3 +30,7 @@ x0_vec = structure_2_vector(x0, p.fields);
 
 %% Simulate ODEs
 sol = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], x0_vec);
+x.MM1 = sol.y(1,:)'; x.MM2 = sol.y(2,:)'; x.MM3 = sol.y(3,:)'; x.MM4 = sol.y(4,:)';
+v = intermediaries(sol.x, x, u, p);
+
+
