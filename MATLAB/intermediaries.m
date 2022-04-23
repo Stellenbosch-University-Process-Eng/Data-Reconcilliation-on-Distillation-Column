@@ -6,5 +6,5 @@ function v = intermediaries(t, x, u, p)
     v.L3 = sqrt(x.MM3);
     v.L4 = sqrt(x.MM4);
     v.LB = v.L1 - v.V0;
-
+    
 end 
