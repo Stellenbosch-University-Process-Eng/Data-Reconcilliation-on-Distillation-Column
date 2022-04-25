@@ -1,4 +1,5 @@
 function dxdt = simulate_ODEs(t, x, u, p)
+% This fucntion simulates the molar holdup ODEs
         
     xS = vector_2_structure(x, p.fieldsM);
     v  = intermediaries(t, xS, u, p);
