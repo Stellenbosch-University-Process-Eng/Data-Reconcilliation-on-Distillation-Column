@@ -1,14 +1,17 @@
 function dxdt = simulate_ODEs(t, x, u, p)
 % This fucntion simulates the molar holdup ODEs
         
-    xS = vector_2_structure(x, p.fieldsM);
-    v  = intermediaries(t, xS, u, p);
+    MM = x(1:p.N);
+    
+    v  = intermediaries(t, MM, u, p);
+    
+    ddt_MM = zeros(p.N, 1);
+    for n = 1:p.N-1
+        ddt_MM(n) = v.L(n+1) - v.L(n) - u.Q{n}(t);
+    end
 
-    ddt.MM1 = v.L2 - v.L1 - u.Q1(t);
-    ddt.MM2 = v.L3 - v.L2 + u.LF(t) - u.Q2(t);
-    ddt.MM3 = v.L4 - v.L3 - u.Q3(t);
-    ddt.MM4 = u.LR(t) - v.L4 - u.Q4(t);
+    ddt_MM(p.N) = u.LR(t) - v.L(p.N) - u.Q{p.N}(t);
 
-    dxdt = structure_2_vector(ddt, p.fieldsM);
+    dxdt = ddt_MM;
 
 end

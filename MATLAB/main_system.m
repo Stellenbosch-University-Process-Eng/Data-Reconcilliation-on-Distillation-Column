@@ -1,6 +1,7 @@
 %% Initialise
 clear
-clc 
+clc
+clf
 
 %% Define time period
 t = linspace(0,1000,1000);
@@ -8,6 +9,8 @@ t = linspace(0,1000,1000);
 %% Define Parameters 
 % Will be leaving this for now. The parameters don't affect the solvability
 % of the system.
+
+p.N = 4;      % ~, number of trays. #TML:note that I provide units (in this case none, ~) and a description
 
 %% Define exogenous variables
 %  Feed variables
@@ -22,33 +25,45 @@ u.MMB = @(t) 10 + 0*t;
 u.MMD = @(t) 10 + 0*t;
 
 %  Heat transfer rates across trays
-u.Q1 = @(t) 0 + 0*t;
-u.Q2 = @(t) 0 + 0*t;
-u.Q3 = @(t) 0 + 0*t;
-u.Q4 = @(t) 0 + 0*t;
+for n = 1 : p.N
+    u.Q{n} = @(t) 0 + 0*t;      % #TML: Cells { } are a useful way of storing things other than numbers, like functions
+end
 u.Freb = @(t) 2 + 0*t;
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-p.fieldsM = ["MM1", "MM2", "MM3", "MM4"];
-x0M.MM1 = 1; x0M.MM2 = 1; x0M.MM3 = 1; x0M.MM4 = 1;
-x0M_vec = structure_2_vector(x0M, p.fieldsM);
+% #TML: I suggest simplifying things, don't use structures for your state
+% variables
+MM0 = ones(p.N, 1);
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
-solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], x0M_vec);
-m.MM1 = solM.y(1,:)'; m.MM2 = solM.y(2,:)'; m.MM3 = solM.y(3,:)'; m.MM4 = solM.y(4,:)';
-vM = intermediaries(solM.x, m, u, p);
+solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], MM0);
+MM = solM.y;
+t = solM.x;
+vM = intermediaries(t, MM, u, p);
 
+%% Plot results
+% #TML: you should plot your results to check if they make sense!
+plot(t, MM)
+xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
+labels = {};
+for n = 1:p.N
+    labels{n} = "MM" + num2str(n);
+end
+legend(labels, 'location', 'best')
 %% Define initial conditions - Concentrations
-% Initial conditions of the liquid mole fractions
-p.fieldsX = ["X1", "X2", "X3", "X4", "XB", "XD"];
-x0X.X1 = 0.1; x0X.X2 = 0.25; x0X.X3 = 0.5; x0X.X4 = 0.8; x0X.XB = 0.02; x0X.XD = 0.98;
-x0X_vec = structure_2_vector(x0X, p.fieldsX);
+% #TML: you need to solve for your mole fractions and hold-ups
+% simultaneously. For discussion during meeting
 
-%% Simulate ODEs - Concentrations
-% This solves the liquid mole fraction ODEs
-sol1 = ode45(@(t, y) simulate_ODEs1(t, x, vM, u, p), [0 1000], x0X_vec)
+% % Initial conditions of the liquid mole fractions
+% p.fieldsX = ["X1", "X2", "X3", "X4", "XB", "XD"];
+% x0X.X1 = 0.1; x0X.X2 = 0.25; x0X.X3 = 0.5; x0X.X4 = 0.8; x0X.XB = 0.02; x0X.XD = 0.98;
+% x0X_vec = structure_2_vector(x0X, p.fieldsX);
+% 
+% %% Simulate ODEs - Concentrations
+% % This solves the liquid mole fraction ODEs
+% sol1 = ode45(@(t, y) simulate_ODEs1(t, x, vM, u, p), [0 1000], x0X_vec)
 
 
 
