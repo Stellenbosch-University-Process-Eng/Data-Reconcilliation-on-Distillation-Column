@@ -7,31 +7,27 @@ clf
 t = linspace(0,1000,1000);
 
 %% Define Parameters 
-p.N = 4;      % ~, Number of trays. 
+p.N = 4;        % ~, Number of trays. 
+p.alpha = 0.25; % ~, Alpha - go do research
+p.yy = 0.8;     % ~, Activity coefficient - go do research
 
 %% Define exogenous variables
-%  Feed variables
-u.LF = @(t) 10 + 1*(t > 300);       % mol/min, Feed liquid flowrate
+% Feed variables
+u.LF = @(t) 10 + 1*(t > 300);       % mol/min, Feed liquid molar flowrate
 u.XF = @(t) 0.5 + 0*t;              % ~, Feed liquid molar fraction 
 
-%  Desired reflux 
-u.LR = @(t) 8.53 + 2*(t > 100);
+% Desired reflux 
+u.R = @(t) 2.5 + 0.2*(t > 100);     % ~, Reflux ratio
 
-%  Molar Holdup
-u.MMB = @(t) 10 + 0*t;
-u.MMD = @(t) 10 + 0*t;
-
-%  Heat transfer rates across trays
+% Heat transfer rates across trays
 for n = 1 : p.N
-    u.Q{n} = @(t) 0 + 0*t;      % #TML: Cells { } are a useful way of storing things other than numbers, like functions
+    u.Q{n} = @(t) 0 + 0*t;          % kJ/mol, Heat transfer rate for each tray
 end
-u.Freb = @(t) 2 + 0*t;
+u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowrate
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-% #TML: I suggest simplifying things, don't use structures for your state
-% variables
-MM0 = ones(p.N, 1);
+MM0 = ones(p.N+1, 1);
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
@@ -45,7 +41,7 @@ vM = intermediaries(t, MM, u, p);
 plot(t, MM)
 xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
 labels = {};
-for n = 1:p.N
+for n = 1:(p.N+1)
     labels{n} = "MM" + num2str(n);
 end
 legend(labels, 'location', 'best')

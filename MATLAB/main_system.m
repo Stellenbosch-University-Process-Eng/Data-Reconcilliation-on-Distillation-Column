@@ -7,7 +7,9 @@ clf
 t = linspace(0,1000,1000);
 
 %% Define Parameters 
-p.N = 4;      % ~, Number of trays. 
+p.N = 4;        % ~, Number of trays. 
+p.alpha = 0.25; % ~, Alpha - go do research
+p.yy = 0.8;     % ~, Activity coefficient - go do research
 
 %% Define exogenous variables
 % Feed variables
@@ -15,7 +17,7 @@ u.LF = @(t) 10 + 1*(t > 300);       % mol/min, Feed liquid molar flowrate
 u.XF = @(t) 0.5 + 0*t;              % ~, Feed liquid molar fraction 
 
 % Desired reflux 
-u.LR = @(t) 8.53 + 2*(t > 100);     % mol/min, Reflux molar flowrate
+u.R = @(t) 2.5 + 0.2*(t > 100);     % ~, Reflux ratio
 
 % Heat transfer rates across trays
 for n = 1 : p.N
@@ -25,7 +27,8 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-MM0 = ones(p.N, 1);
+MM0 = ones(p.N+1, 1);
+xx0 = ones(p.N+2, 1);
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
@@ -39,7 +42,7 @@ vM = intermediaries(t, MM, u, p);
 plot(t, MM)
 xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
 labels = {};
-for n = 1:p.N
+for n = 1:(p.N+1)
     labels{n} = "MM" + num2str(n);
 end
 legend(labels, 'location', 'best')
