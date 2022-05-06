@@ -1,6 +1,6 @@
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
-    MM = x(1:p.N);
+    MM = x(1:p.N+2);
 
     v.V0 = u.Freb(t);
     v.V1 = v.V0 + u.Q{1}(t);
