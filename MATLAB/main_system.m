@@ -10,6 +10,11 @@ t = linspace(0,1000,1000);
 p.N = 4;        % ~, Number of trays. 
 p.alpha = 0.25; % ~, Alpha - go do research
 p.yy = 0.8;     % ~, Activity coefficient - go do research
+p.kw = 0.5;     % ~, No idea
+p.lw = 0.5;     % ~, No idea
+p.pm = 0.5;     % ~, Density
+p.A  = 2;       % m^2, Area 
+p.kr = 0.5;     % ~, Reboiler constant
 
 %% Define exogenous variables
 % Feed variables
@@ -24,6 +29,7 @@ for n = 1 : p.N
     u.Q{n} = @(t) 0 + 0*t;          % kJ/mol, Heat transfer rate for each tray
 end
 u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowrate
+u.Qreb = @(t) p.kr*u.Freb(t);     % kJ/mol, Reboiler duty
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs

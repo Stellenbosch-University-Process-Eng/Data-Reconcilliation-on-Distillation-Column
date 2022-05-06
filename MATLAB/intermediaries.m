@@ -1,18 +1,25 @@
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
-    MM = x(1:p.N+2);
 
-    v.V0 = u.Freb(t);
-    v.V1 = v.V0 + u.Q{1}(t);
-    v.V2 = v.V1 + u.Q{2}(t);
-    v.V3 = v.V2 + u.Q{3}(t);
-    v.V4 = v.V3 + u.Q{4}(t);
+% Define the dependent variable
+    MM = x(1:p.N+2);                % mol/min, Molar holdup
 
-    for n = 1:p.N
-        v.L(n) = sqrt(MM(n));
+% Calculate Heat Transfer duties
+    v.Qreb = p.kr*u.Freb(t);        % kJ/mol, Reboiler heat transfer duty
+    v.Qcon = p.yy*v.V(4);           % kJ/mol, Condenser heat transfer duty
+
+% Calculate Vapour molar flowrates
+    v.V(1) = v.Qreb/p.yy;                       % mol/min, Vapour molar flowrate - V0
+    for n = 2:p.N
+        v.V(n) = v.V(n-1) + u.Q{n}(t)/p.yy;     % mol/min, Vapour molar flowrate - V1:V4
     end
-    v.LB = v.L(1) - v.V0;
-    v.LR = v.V4./(1 + u.R(t));
-    v.LD = v.LR/u.R(t);
+
+% Calculate Liquid molar flowrates
+    for n = 1:p.N
+        v.L(n) = sqrt(MM(n));       % mol/min, Liquid molar flowrate - L1:L4
+    end
+    v.LB = v.L(1) - v.V0;           % mol/min, Liquid molar flowrate - LB 
+    v.LR = v.V4./(1 + u.R(t));      % mol/min, Liquid molar flowrate - LR
+    v.LD = v.LR/u.R(t);             % mol/min, Liquid molar flowrate - LD
     
 end 
