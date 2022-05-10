@@ -7,12 +7,12 @@ clf
 t = linspace(0,1000,1000);
 
 %% Define Parameters 
-p.N = 4;        % ~, Number of trays. 
+p.N = 4;        % ~, Number of trays 
 p.alpha = 2.4;  % ~, Relative volatility
-p.yy = 2500;    % ~, Activity coefficient - go do research
-p.kw = 0.5;     % ~, No idea
-p.lw = 0.5;     % ~, No idea
-p.pm = 0.5;     % ~, Density
+p.yy = 2500;    % ~, Activity coefficient 
+p.kw = 0.5;     % ~, Weir constant
+p.lw = 0.5;     % m, Weir height
+p.pm = 0.5;     % moles/m^3, Density
 p.A  = 2;       % m^2, Area 
 p.kr = 0.5;     % ~, Reboiler constant
 
