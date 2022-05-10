@@ -3,12 +3,9 @@ function v = intermediaries(t, x, u, p)
 
 % Define the dependent variable
     MM = x(1:p.N+2);                % mol/min, Molar holdup
-
-% Define Reboiler duty
-    v.Qreb = p.kr*u.Freb(t);        % kJ/mol, Reboiler heat transfer duty
   
 % Calculate Vapour molar flowrates
-    v.V(1) = v.Qreb/p.yy;                       % mol/min, Vapour molar flowrate - V0
+    v.V(1) = u.Freb(t)/p.yy;                    % mol/min, Vapour molar flowrate - V0
     for n = 2:p.N
         v.V(n) = v.V(n-1) + u.Q{n}(t)/p.yy;     % mol/min, Vapour molar flowrate - V1:V4
     end 
