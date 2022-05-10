@@ -8,8 +8,8 @@ t = linspace(0,1000,1000);
 
 %% Define Parameters 
 p.N = 4;        % ~, Number of trays. 
-p.alpha = 0.25; % ~, Alpha - go do research
-p.yy = 0.8;     % ~, Activity coefficient - go do research
+p.alpha = 2.4;  % ~, Relative volatility
+p.yy = 2500;    % ~, Activity coefficient - go do research
 p.kw = 0.5;     % ~, No idea
 p.lw = 0.5;     % ~, No idea
 p.pm = 0.5;     % ~, Density

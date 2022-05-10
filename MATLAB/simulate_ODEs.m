@@ -12,7 +12,7 @@ function dxdt = simulate_ODEs(t, x, u, p)
 
     ddt_MM(p.N) = v.LR - v.L(p.N) - u.Q{p.N}(t)/p.yy;   % mol/min, Molar holdup - MM4
     ddt_MM(5)   = v.L(1) - v.LB - u.Freb(t)/p.yy;       % mol/min, Molar holdup - MMB
-    ddt_MM(6)   = v.V4 - v.LD - v.LR - v.V4*p.yy;       % mol/min, Molar holdup - MMD
+    ddt_MM(6)   = v.V(p.N) - v.LD - v.LR - v.V(p.N)*p.yy;       % mol/min, Molar holdup - MMD
 
     dxdt = ddt_MM;
 
