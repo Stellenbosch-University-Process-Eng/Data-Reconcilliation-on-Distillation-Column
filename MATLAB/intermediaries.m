@@ -1,13 +1,13 @@
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
-
 % Define the dependent variable
-    MM = x(1:p.N+2);                % mol/min, Molar holdup
-  
+    MM = x(1:10);
+    
 % Calculate Vapour molar flowrates
-    v.V(1,:) = u.Freb(t)/p.yy;                    % mol/min, Vapour molar flowrate - V0
+    v.V0 = u.Freb(t);                    % mol/min, Vapour molar flowrate - V0
+    v.V(1,:) = v.V0 + u.Q{1}(t);
     for n = 2:p.N
-        v.V(n,:) = v.V(n-1) + u.Q{n}(t)/p.yy;     % mol/min, Vapour molar flowrate - V1:V4
+        v.V(n,:) = v.V(n-1) + u.Q{n}(t);     % mol/min, Vapour molar flowrate - V1:V4
     end 
 
 % Calculate Liquid molar flowrates
@@ -18,7 +18,12 @@ function v = intermediaries(t, x, u, p)
     v.LR = v.V(p.N,:)./(1 + u.R(t));    % mol/min, Liquid molar flowrate - LR
     v.LD = v.LR./u.R(t);             % mol/min, Liquid molar flowrate - LD
 
+% Calculate Vapour molar flowrates
+    v.Y0 = (p.alpha*MM(9))./(1 + (1-p.alpha)*MM(9));
+    for n = 1:p.N
+        v.Y(n,:) = (p.alpha*MM(n+4))./(1 + (1-p.alpha)*MM(n+4));
+    end
 % Calculate Condenser duty
-    v.Qcon = p.yy*v.V(p.N,:);           % kJ/mol, Condenser heat transfer duty
+    v.Qcon = v.V(p.N,:);           % kJ/mol, Condenser heat transfer duty
 
 end 
