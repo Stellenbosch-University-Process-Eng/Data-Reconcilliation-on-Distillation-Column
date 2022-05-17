@@ -2,7 +2,7 @@ function dxdt = simulate_ODEs(t, x, u, p)
 % This fucntion simulates the molar holdup ODEs
 
 % Define dependent variables   
-    MM = x(1:10);
+    MM = x(1:(p.N*2)+2);
 
 % Caculates intermediaries
     v  = intermediaries(t, MM, u, p);  
@@ -17,12 +17,13 @@ function dxdt = simulate_ODEs(t, x, u, p)
 
 % Calculate Liquid fracion derivatives
     ddt_X = zeros(p.N, 1);
-    ddt_X(1) = v.L(2).*(MM(6)-1) + v.L(1).*(1-MM(5)) - v.V(1).*v.Y(1) + v.V0.*v.Y0 + u.Q{n}(t).*MM(5)
-    for n = 2:p.N
-        ddt_X(n) = v.L(n+1+4)*(MM(n+1+4)-1) + v.L(n)*(1-MM(n+4)) - v.V(n)*v.Y(n) + v.V(n-1)*v.Y(n-1) + u.Q{n}*MM(n+4);
+    ddt_X(1) = v.L(2).*(MM(2+p.N)) + v.L(1).*(1-MM(1+p.N)) - v.V(1).*v.Y(1) + v.V0.*v.Y0 + u.Q{n}(t).*MM(1+p.N);
+    for n = 2:p.N-1
+        ddt_X(n) = v.L(n+1)*(MM(n+1+p.N)) + v.L(n)*(1-MM(n+p.N)) - v.V(n)*v.Y(n) + v.V(n-1)*v.Y(n-1) + u.Q{n}(t).*MM(n+p.N);
     end
-    ddt_XB = v.L(1)*MM(5) - v.LB*MM(9) - v.V0*v.Y0;
-    ddt_XD = v.V(p.N) * (v.Y(p.N) - MM(10));
+    ddt_X(p.N) = v.LR*(MM(p.N*2+2)) + v.L(p.N)*(1-MM(p.N*2)) - v.V(p.N)*v.Y(p.N) + v.V(p.N-1)*v.Y(p.N-1) + u.Q{p.N}(t).*MM(p.N*2);
+    ddt_XB = v.L(1)*MM(1+p.N) - v.LB*MM(p.N*2+1) - v.V0*v.Y0;
+    ddt_XD = v.V(p.N) * (v.Y(p.N) - MM(p.N*2+2));
     dxdt = [ddt_MM; ddt_X; ddt_XB; ddt_XD];
 
 end
