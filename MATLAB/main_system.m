@@ -32,7 +32,7 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-MM0 = ones((p.N*2)+2, 1);
+MM0 = [1;1;1;1;0.02;0.1;0.25;0.65;0.8;0.98];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
@@ -61,3 +61,22 @@ end
 labelsX{p.N+1} = "XB";
 labelsX{p.N+2} = "XD";
 legend(labelsX, 'location', 'best')
+
+%% Measurements
+m.XB = MM(:,p.N*2+1);
+m.XD = MM(:,p.N*2+2);
+% Define fields for the desired measurements
+meas.fields = {'XB','XD','LD'};
+
+% Define measurement structure
+meas.XB  = struct('func', @(t, m, u, vM) m.XB, 'var', 0.1, 'T', 1,  'D', 0);
+meas.XD  = struct('func', @(t, m, u, vM) m.XD, 'var', 0.1, 'T', 1,  'D', 0);
+meas.LD  = struct('func', @(t, m, u, vM) vM.LD, 'var', 0.1, 'T', 2,  'D', 0);
+
+y = measurements(t, m, u, vM, meas);
+ytB = y.XB.Time(:,1:end)';
+ytD = y.XD.Time(:,1:end)';
+ytL = y.LD.Time(:,1:end)';
+yB  = y.XB.Data(:,1:end)';
+yD  = y.XD.Data(:,1:end)';
+yL  = y.LD.Data(:,1:end)';

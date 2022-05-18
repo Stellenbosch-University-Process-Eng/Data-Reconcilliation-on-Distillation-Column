@@ -1,4 +1,4 @@
-function y = measurements(t, x, u, v, p, meas)
+function y = measurements(t, m, u, vM, meas)
 % This function uses process variables (t, x, u, v) as inputs, as well as a structure
 % describing the nature of the measurements, to generate a set of measured
 % values. The measured values are returned as time-series objects
@@ -32,7 +32,7 @@ function y = measurements(t, x, u, v, p, meas)
 % Calculate measurement values for each field in "meas"
 for i = 1:length(meas.fields)
     current = meas.(meas.fields{i});    % Current measurement
-    values = current.func(t, x, u, v) + current.var*randn(size(t)); % Time-series values + noise
+    values = current.func(t,m,u,vM) + current.var*randn(size(t)); % Time-series values + noise
     times = 0 : current.T : t(end); % Measurement time points
     interp_values = interp1(t, values, times); % Interpolate to measurement time-points
     
