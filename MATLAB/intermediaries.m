@@ -1,6 +1,6 @@
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
-% Testing github desktop
+
 % Define the dependent variable
     MM = x(1:(p.N*2)+2);
     
