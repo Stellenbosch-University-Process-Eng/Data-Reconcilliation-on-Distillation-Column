@@ -37,15 +37,27 @@ MM0 = ones((p.N*2)+2, 1);
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
 solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], MM0);
-MM = solM.y;
-t = solM.x;
+MM = solM.y';
+t = solM.x';
 vM = intermediaries(t, MM, u, p);
 
 %% Plot results
-plot(t, MM)
+subplot(1,2,1)
+plot(t, MM(:,1:p.N));
 xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
-labels = {};
-for n = 1:(p.N)
-    labels{n} = "MM" + num2str(n);
+labelsM = {};
+for n = 1:p.N
+        labelsM{n} = "MM" + num2str(n);
 end
-legend(labels, 'location', 'best')
+legend(labelsM, 'location', 'best')
+
+subplot(1,2,2)
+plot(t, MM(:,(p.N+1):end))
+xlabel('Time (s)'); ylabel('Liquid mol fraction)')
+labelsX = {};
+for n = 1:p.N
+    labelsX{n} = "X" + num2str(n);
+end
+labelsX{p.N+1} = "XB";
+labelsX{p.N+2} = "XD";
+legend(labelsX, 'location', 'best')
