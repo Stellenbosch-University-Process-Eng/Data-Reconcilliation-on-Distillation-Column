@@ -32,7 +32,7 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-MM0 = [1;1;1;1;0.02;0.1;0.25;0.65;0.8;0.98];
+MM0 = [1;1;1;1;0;0;0;0;0;0];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
@@ -42,25 +42,26 @@ t = solM.x';
 vM = intermediaries(t, MM, u, p);
 
 %% Plot results
-subplot(1,2,1)
-plot(t, MM(:,1:p.N));
-xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
-labelsM = {};
-for n = 1:p.N
-        labelsM{n} = "MM" + num2str(n);
-end
-legend(labelsM, 'location', 'best')
+% subplot(1,2,1)
+% plot(t, MM(:,1:p.N));
+% xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
+% labelsM = {"","","",""};
+% for n = 1:p.N
+%         labelsM{n} = "MM" + num2str(n);
+% end
+% legend(labelsM, 'location', 'best')
 
-subplot(1,2,2)
+% subplot(1,2,2)
 plot(t, MM(:,(p.N+1):end))
-xlabel('Time (s)'); ylabel('Liquid mol fraction)')
+xlabel('Time (s)'); ylabel('Liquid mol fraction')
 labelsX = {};
 for n = 1:p.N
     labelsX{n} = "X" + num2str(n);
 end
-labelsX{p.N+1} = "XB";
-labelsX{p.N+2} = "XD";
+labelsX{p.N+1} = "XB + Noise";
+labelsX{p.N+2} = "XD + Noise";
 legend(labelsX, 'location', 'best')
+hold on
 
 %% Measurements
 m.XB = MM(:,p.N*2+1);
@@ -80,3 +81,6 @@ ytL = y.LD.Time(:,1:end)';
 yB  = y.XB.Data(:,1:end)';
 yD  = y.XD.Data(:,1:end)';
 yL  = y.LD.Data(:,1:end)';
+
+plot(ytB, yB, ytD, yD)
+hold off
