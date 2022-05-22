@@ -13,7 +13,7 @@ function v = intermediaries(t, x, u, p)
 
 % Calculate Liquid molar flowrates
     for n = 1:p.N
-        v.L(:,n) = sqrt(MM(n));       % mol/min, Liquid molar flowrate - L1:L4
+        v.L(:,n) = (1e-3)*sqrt(MM(n));       % mol/min, Liquid molar flowrate - L1:L4
     end
     v.LB(:,1) = v.L(:,1) - v.V(:,1);         % mol/min, Liquid molar flowrate - LB 
     v.LR(:,1) = v.V(:,p.N)./(1 + u.R(t));    % mol/min, Liquid molar flowrate - LR
