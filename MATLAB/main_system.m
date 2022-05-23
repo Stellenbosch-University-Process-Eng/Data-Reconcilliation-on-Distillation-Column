@@ -36,10 +36,10 @@ DV0 = [1;1;1;1;0;0;0;0;0;0];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
-solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], DV0);
-MM = solM.y';
-t = solM.x';
-vM = intermediaries(t, MM, u, p);
+sol = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], DV0);
+DV = sol.y';
+t = sol.x';
+vM = intermediaries(t, DV, u, p);
 
 %% Plot results
 % subplot(1,2,1)
@@ -52,7 +52,7 @@ vM = intermediaries(t, MM, u, p);
 % legend(labelsM, 'location', 'best')
 
 % subplot(1,2,2)
-plot(t, MM(:,(p.N+1):end))
+plot(t, DV(:,(p.N+1):end))
 xlabel('Time (s)'); ylabel('Liquid mol fraction')
 labelsX = {};
 for n = 1:p.N
@@ -64,8 +64,8 @@ legend(labelsX, 'location', 'best')
 hold on
 
 %% Measurements
-m.XB = MM(:,p.N*2+1);
-m.XD = MM(:,p.N*2+2);
+m.XB = DV(:,p.N*2+1);
+m.XD = DV(:,p.N*2+2);
 % Define fields for the desired measurements
 meas.fields = {'XB','XD','LD'};
 

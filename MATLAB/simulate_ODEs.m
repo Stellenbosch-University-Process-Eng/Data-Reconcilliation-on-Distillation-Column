@@ -1,15 +1,13 @@
 function dxdt = simulate_ODEs(t, x, u, p)
 % This fucntion simulates the molar holdup ODEs
 
-% Define dependent variables   
-    MM = x(1:p.N);
-    X  = x(p.N+1:end);
-% Note the following: 
-% MM(1:p.N) = MM_tray1 - MM_tray(p.N)
-% MM(p.N + 1 : p.N*2 + 2) = X_1 - X_tray(p.N); XB; XD
+% Define dependent variables
+    DV = x(1:(p.N*2+2));        % Depedent Variables
+    MM = DV(1:p.N);             % mol/min, Molar holdup
+    X  = DV(p.N+1:end);         % ~, Liquid mole fraction
 
 % Caculate intermediaries
-    v  = intermediaries(t, MM, u, p);  
+    v  = intermediaries(t, DV, u, p);  
     
 % Calculate Molar holup derivatives 
 % Formula:
