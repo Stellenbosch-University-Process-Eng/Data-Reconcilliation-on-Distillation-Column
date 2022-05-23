@@ -32,11 +32,11 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-MM0 = [1;1;1;1;0;0;0;0;0;0];
+DV0 = [1;1;1;1;0;0;0;0;0;0];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
-solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], MM0);
+solM = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], DV0);
 MM = solM.y';
 t = solM.x';
 vM = intermediaries(t, MM, u, p);
