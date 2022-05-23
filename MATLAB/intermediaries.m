@@ -1,10 +1,11 @@
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
 
-% Define the dependent variable
-    DV = x(1:(p.N*2+2));
-    MM = DV(1:p.N);
-    X  = DV(p.N+1:end);
+% Define dependent variables
+    DV = x(1:(p.N*2+2));        % Depedent Variables
+    MM = DV(1:p.N);             % mol/min, Molar holdup
+    X  = DV(p.N+1:end);         % ~, Liquid mole fraction
+    
 % Calculate Vapour molar flowrates
     v.V0 = u.Freb(t);                    % mol/min, Vapour molar flowrate - V0
     v.V(:,1) = v.V0 + u.Q{1}(t);
