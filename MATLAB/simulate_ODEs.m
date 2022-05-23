@@ -30,7 +30,7 @@ function dxdt = simulate_ODEs(t, x, u, p)
         ddt_X(n) = (v.L(n+1)*(MM(n+1+p.N) - MM(n+p.N)) - v.V(n)*v.Y(n)...
                    + v.V(n-1)*v.Y(n-1) + u.Q{n}(t).*MM(n+p.N))./MM(n);
     end
-    ddt_X(2) = ddt_X(2) + u.LF(t).*(u.XF(t) - MM(2 + p.N));
+    ddt_X(2) = ddt_X(2) + (u.LF(t).*(u.XF(t) - MM(2 + p.N)))./MM(2);
     ddt_X(p.N) = (v.LR*(MM(p.N*2+2) - MM(p.N*2)) - v.V(p.N)*v.Y(p.N)...
                  + v.V(p.N-1)*v.Y(p.N-1) + u.Q{p.N}(t).*MM(p.N*2))./MM(p.N);
     ddt_XB = (v.L(1).*MM(1+p.N) - v.LB.*MM(p.N*2+1) - v.V0*v.Y0)/10;
