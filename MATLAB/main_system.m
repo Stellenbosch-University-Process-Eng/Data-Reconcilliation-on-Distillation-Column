@@ -38,8 +38,8 @@ DV0 = [1;1;1;1;0;0;0;0;0;0];
 % This solves the molar holdup ODEs
 sol = ode45(@(t, x) simulate_ODEs(t, x, u, p), [0 1000], DV0);
 DV = sol.y';
-t = sol.x';
-vM = intermediaries(t, DV, u, p);
+tSol = sol.x';
+vM = intermediaries(tSol, DV, u, p);
 
 %% Plot results
 % subplot(1,2,1)
@@ -52,7 +52,7 @@ vM = intermediaries(t, DV, u, p);
 % legend(labelsM, 'location', 'best')
 
 % subplot(1,2,2)
-plot(t, DV(:,(p.N+1):end))
+plot(tSol, DV(:,(p.N+1):end))
 xlabel('Time (s)'); ylabel('Liquid mol fraction')
 labelsX = {};
 for n = 1:p.N
@@ -74,7 +74,7 @@ meas.XB  = struct('func', @(t, m, u, vM) m.XB, 'var', 0.1, 'T', 1,  'D', 0);
 meas.XD  = struct('func', @(t, m, u, vM) m.XD, 'var', 0.1, 'T', 1,  'D', 0);
 meas.LD  = struct('func', @(t, m, u, vM) vM.LD, 'var', 0.1, 'T', 2,  'D', 0);
 
-y = measurements(t, m, u, vM, meas);
+y = measurements(tSol, m, u, vM, meas);
 ytB = y.XB.Time(:,1:end)';
 ytD = y.XD.Time(:,1:end)';
 ytL = y.LD.Time(:,1:end)';
