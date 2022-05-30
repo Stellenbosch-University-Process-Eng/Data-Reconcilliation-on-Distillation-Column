@@ -1,5 +1,5 @@
-%% Examples of DR
-% Example
+%% Function that runs the DR
+% Exam
 y1 = ones(7,1);
 y2 = [2;2;2;2;2;10];
 yDR = [y1;y2];
