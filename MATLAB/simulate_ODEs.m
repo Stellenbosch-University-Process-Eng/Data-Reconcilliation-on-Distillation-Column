@@ -14,11 +14,14 @@ function dxdt = simulate_ODEs(t, x, u, p)
 % dMM_i/dt = L_i+1 - L_i + L_fi - Qi/lambda
     ddt_MM = zeros(p.N, 1);
     for n = 1:p.N-1
-        ddt_MM(n) = v.L(n+1,:) - v.L(n,:) - u.Q{n}(t);     % mol/min, Molar holdup - MM1:MM3
+        if n == 2
+            ddt_MM(n) = u.LF(t) + v.L(n+1,:) - v.L(n,:) - u.Q{n}(t);  % mol/min, Added feed flowrate to MM2
+        else
+            ddt_MM(n) = v.L(n+1,:) - v.L(n,:) - u.Q{n}(t);            % mol/min, Molar holdup - MM1:MM3
+        end
     end
-    ddt_MM(2) = ddt_MM(2) + u.LF(t);                   % mol/min, Added feed flowrate to MM2
-    ddt_MM(p.N) = v.LR - v.L(p.N,:) - u.Q{p.N}(t);       % mol/min, Molar holdup - MM4
-
+    ddt_MM(p.N) = v.LR - v.L(p.N,:) - u.Q{p.N}(t);                    % mol/min, Molar holdup - MM4
+    
 % Calculate Liquid fracion derivatives
 % dX_i/dt = L_i+1 * (X_i+1 - X_i)  +  L_fi * (X_fi - X_i)  -  V_i * Y_i  +
 %           V_i-1 * Y_i-1  +  (Q_i * X_i)/lambda
