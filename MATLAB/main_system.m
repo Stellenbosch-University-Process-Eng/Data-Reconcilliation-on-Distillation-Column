@@ -32,7 +32,7 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-DV0 = [1;1;1;1;0;0;0;0;0;0];
+DV0 = [ones(p.N,1); zeros(p.N+2,1)];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
@@ -103,30 +103,36 @@ end
 
 
 %% Plot results
+% Plot Molar Holup
 subplot(3,1,1)
 plot(tSol, MM);
+labelsM = cell(1,p.N);
 for n = 1:p.N
         labelsM{n} = "MM" + num2str(n);
 end
 xlabel('Time (s)'); ylabel('Liquid holdup (mol)')
 legend(labelsM, 'location', 'best')
 
+% Plot Molar Fractions
 subplot(3,1,2)
 plot(tSol, X)
+labelsX = cell(1,p.N);
 for n = 1:p.N
     labelsX{n} = "X" + num2str(n);
 end
 xlabel('Time (s)'); ylabel('Liquid mol fraction')
-labelsX{p.N+1} = "XB";
-labelsX{p.N+2} = "XD";
+labelsX{end+1} = "XB";
+labelsX{end+1} = "XD";
 legend(labelsX, 'location', 'best')
 
+% Plot Liquid Flowrates
 subplot(3,1,3)
 plot(tSol, v.L', tSol, v.LB', 'r', tSol, v.LD', tSol, v.LR', 'b')
 hold on
 plot(time, measured_data.LB, 'r', time, measured_data.LR, 'b')
 hold off
 xlabel('Time (s)'); ylabel('Liquid molar flowrate')
+labelsL = cell(1,p.N);
 for n = 1:p.N
     labelsL{n} = "L"+num2str(n);
 end
