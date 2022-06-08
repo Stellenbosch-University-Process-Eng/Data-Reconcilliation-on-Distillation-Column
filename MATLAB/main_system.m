@@ -8,8 +8,8 @@ t = linspace(0,1000,1000);
 %% Define Parameters 
 p.N = 4;        % ~, Number of trays 
 p.alpha = 2.4;  % ~, Relative volatility
-% p.yy = 2500;    % ~, Activity coefficient 
-% p.kw = 0.5;     % ~, Weir constant
+p.yy = 1;       % ~, Activity coefficient 
+p.kw = 0.5;     % ~, Weir constant
 % p.lw = 0.5;     % m, Weir height
 % p.pm = 0.5;     % moles/m^3, Density
 % p.A  = 2;       % m^2, Area 
@@ -20,8 +20,9 @@ p.alpha = 2.4;  % ~, Relative volatility
 u.LF = @(t) 10 + 1*(t > 300);       % mol/min, Feed liquid molar flowrate
 u.XF = @(t) 0.5 + 0*t;              % ~, Feed liquid molar fraction 
 
-% Desired reflux 
+% Desired ratios 
 u.R = @(t) 2.5 + 0.2*(t > 100);     % ~, Reflux ratio
+u.B = @(t) 2 + 0*t;                 % ~, Boilup ratio
 
 % Heat transfer rates across trays
 for n = 1 : p.N
