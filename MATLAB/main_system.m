@@ -9,11 +9,11 @@ t = linspace(0,1000,1000);
 p.N = 4;        % ~, Number of trays 
 p.alpha = 2.4;  % ~, Relative volatility
 p.yy = 1;       % ~, Activity coefficient 
-p.kw = 0.5;     % ~, Weir constant
-% p.lw = 0.5;     % m, Weir height
-% p.pm = 0.5;     % moles/m^3, Density
-% p.A  = 2;       % m^2, Area 
-% p.kr = 0.5;     % ~, Reboiler constant
+p.kw = 10;     % ~, Weir constant
+p.lw = 0;       % m, Weir height
+p.pm = 5;       % moles/m^3, Density
+p.A  = 1;       % m^2, Area 
+p.kr = 0.5;     % ~, Reboiler constant
 
 %% Define exogenous variables
 % Feed variables
@@ -78,7 +78,7 @@ end
 for i = 1:p.N
     meas.("L"+num2str(i)) = struct('func', @(t,m,u,v) m.("L"+num2str(i)), 'var', 0.1, 'T', 1, 'D', 0);
 end
-meas.LB = struct('func', @(t,m,u,v) m.LB, 'var', 0.1, 'T', 1, 'D', 0);
+meas.LB = struct('func', @(t,m,u,v) m.LB, 'var', 1.1, 'T', 1, 'D', 0);
 meas.LD = struct('func', @(t,m,u,v) m.LD, 'var', 0.1, 'T', 1, 'D', 0);
 meas.LR = struct('func', @(t,m,u,v) m.LR, 'var', 0.1, 'T', 1, 'D', 0);
 
