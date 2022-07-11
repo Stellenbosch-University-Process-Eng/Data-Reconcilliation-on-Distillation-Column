@@ -17,11 +17,11 @@ p.kr = 0.5;     % ~, Reboiler constant
 
 %% Define exogenous variables
 % Feed variables
-u.LF = @(t) 10 + 1*(t > 300);       % mol/min, Feed liquid molar flowrate
+u.LF = @(t) 10 + 0*(t > 300);       % mol/min, Feed liquid molar flowrate
 u.XF = @(t) 0.5 + 0*t;              % ~, Feed liquid molar fraction 
 
 % Desired ratios 
-u.R = @(t) 2.5 + 0.2*(t > 100);     % ~, Reflux ratio
+u.R = @(t) 2.5 + 0*(t > 100);     % ~, Reflux ratio
 u.B = @(t) 2 + 0*t;                 % ~, Boilup ratio
 
 % Heat transfer rates across trays
@@ -46,7 +46,6 @@ v = intermediaries(tSol, DV, u, p);
 MM = DV(1:p.N,:)';
 X  = DV(p.N+1:end,:)';
 tSol = tSol';
-save('true_data', 'MM', 'X', 'tSol', 'v', 'u', 'p')
 
 %% Plot results
 % Plot Molar Holdup
@@ -83,3 +82,11 @@ labelsL{end+1} = "LB";
 labelsL{end+1} = "LD";
 labelsL{end+1} = "LR";
 legend(labelsL, 'location', 'best')
+
+%% Measure true data 
+true_data = measureTrue(v, u, p, tSol);
+
+%% Save data
+save('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'u', 'p')
+
+

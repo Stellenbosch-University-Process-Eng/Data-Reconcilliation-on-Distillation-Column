@@ -3,78 +3,35 @@ clear
 clc
 
 %% Load data
-load('true_data', 'MM', 'X', 'tSol', 'v', 'p', 'u')
+load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
-%% Measurements
-% Define measurements
-for i = 1:p.N
-    m.("L"+num2str(i)) = v.L(i,:)'; 
-end
-m.LB = v.LB';
-m.LD = v.LD';
-m.LR = v.LR';
-m.LF = u.LF(tSol);
+%% Measurements with Variance
+variance = 0.1
+[measured_data time] = measureReal(v, u, p, tSol, variance);
 
-m.V0 = v.V0';
-for i = 1:p.N
-    m.("V"+num2str(i)) = v.V(i,:)'; 
-end
-
-% Define measurement fields
-for i = 1:p.N
-    meas.fields{i} = "L"+num2str(i);
-end
-meas.fields{end+1} = "LB";
-meas.fields{end+1} = "LD";
-meas.fields{end+1} = "LR";
-meas.fields{end+1} = "LF";
-
-meas.fields{end+1} = "V0";
-for i = 1:p.N
-    meas.fields{end+1} = "V"+num2str(i);
-end
-
-% Define measurement structure
-for i = 1:p.N
-    meas.("L"+num2str(i)) = struct('func', @(t,m,u,v) m.("L"+num2str(i)), 'var', 0.1, 'T', 1, 'D', 0);
-end
-meas.LB = struct('func', @(t,m,u,v) m.LB, 'var', 0.1, 'T', 1, 'D', 0);
-meas.LD = struct('func', @(t,m,u,v) m.LD, 'var', 0.1, 'T', 1, 'D', 0);
-meas.LR = struct('func', @(t,m,u,v) m.LR, 'var', 0.1, 'T', 1, 'D', 0);
-meas.LF = struct('func', @(t,m,u,v) m.LF, 'var', 0.1, 'T', 1, 'D', 0);
-
-meas.V0 = struct('func', @(t,m,u,v) m.V0, 'var', 0.1, 'T', 1, 'D', 0);
-for i = 1:p.N
-    meas.("V"+num2str(i)) = struct('func', @(t,m,u,v) m.("V"+num2str(i)), 'var', 0.1, 'T', 1, 'D', 0);
-end
-
-meas.LF = struct('func', @(t,m,u,v) m.LF, 'var', 0.1, 'T', 1, 'D', 0);
-
-% Call measurement function
-y = measurements(tSol, m, u, v, meas);
-time = y.L1.Time;
-for i = 1:p.N
-    measured_data.("L"+num2str(i)) = y.("L"+num2str(i)).Data(:,1:end);
-end
-measured_data.LB = y.LB.Data(:,1:end);
-measured_data.LD = y.LD.Data(:,1:end);
-measured_data.LR = y.LR.Data(:,1:end);
-measured_data.LF = y.LF.Data(:,1:end);
-
-measured_data.V0 = y.V0.Data(:,1:end);
-for i = 1:p.N
-    measured_data.("V"+num2str(i)) = y.("V"+num2str(i)).Data(:,1:end);
-end
-
-%% Linear Data Renconciliation - All Variables Measured
+%% Setting up Matrices
 % Measurement values
-measurements = [measured_data.L1; measured_data.L2; measured_data.L3;...
-                measured_data.L4; measured_data.LB; measured_data.LD;...
-                measured_data.LR; measured_data.V0; measured_data.V1;...
-                measured_data.V2; measured_data.V3; measured_data.V4;...
-                measured_data.LF];
+% Liquid Measurements
+for i = 1:p.N
+    measurements_L(i,:) = measured_data.("L"+num2str(i));
+end
+measurements_LB = measured_data.LB;
+measurements_LD = measured_data.LD;
+measurements_LR = measured_data.LR;
+measurements_LF = measured_data.LF;
 
-% Variance
+% Vapour Measurements
+measurements_V0 = measured_data.V0;
+for i = 1:p.N
+    measurements_V(i,:) = measured_data.("V"+num2str(i));
+end
+
+% Measurement & Model Matrix
+measurements = [measurements_L; measurements_LB; measurements_LD;...
+                measurements_LR; measurements_V0; measurements_V;...
+                measurements_LF];
+                   
+% Variance Matrix
 W = eye(13);
 for i = 1:13
     for j = 1:13
@@ -84,34 +41,63 @@ for i = 1:13
     end
 end
 
+% The A matrix
+
 % The System of Equations
 % 1. L1 - LB - V0           = 0
-% 2. LF + L2 - L1 + V0 - V1 = 0
-% 3. L3 - L2 + V1 - V2      = 0
+% 2. L2 - L1 + V0 - V1      = 0
+% 3. L3 + LF - L2 + V1 - V2 = 0
 % 4. L4 - L3 + V2 - V3      = 0
 % 5. LR - L4 + V3 - V4      = 0
 % 6. V4 - LR - LD           = 0
+% 7. LF - LD - LB           = 0
 
-% Also need automate this
 %    L1 L2 L3 L4 LB LD LR V0 V1 V2 V3 V4 LF
 A = [+1 +0 +0 +0 -1 +0 +0 -1 +0 +0 +0 +0 +0;...
-     -1 +1 +0 +0 +0 +0 +0 +1 -1 +0 +0 +0 +1;... 
-     +0 -1 +1 +0 +0 +0 +0 +0 +1 -1 +0 +0 +0;... 
+     -1 +1 +0 +0 +0 +0 +0 +1 -1 +0 +0 +0 +0;... 
+     +0 -1 +1 +0 +0 +0 +0 +0 +1 -1 +0 +0 +1;... 
      +0 +0 -1 +1 +0 +0 +0 +0 +0 +1 -1 +0 +0;... 
      +0 +0 +0 -1 +0 +0 +1 +0 +0 +0 +1 -1 +0;... 
-     +0 +0 +0 +0 +0 -1 -1 +0 +0 +0 +0 +1 +0];  
+     +0 +0 +0 +0 +0 -1 -1 +0 +0 +0 +0 +1 +0];
  
-%x_D  = y_model - W*A'*inv(A*W*A')*A*y_model;
-y_DR_linear = measurements - inv(W)*A'*inv(A*inv(W)*A')*(A*measurements);
+y_DR_linear = measurements - W\A'*inv(A*(W\A'))*(A*measurements);
 LB_DR = y_DR_linear(5,:);
 LR_DR = y_DR_linear(7,:);
 
-subplot(2,1,1)
-plot(tSol, v.LB, 'c', time, measured_data.LB, 'r', time, LB_DR, 'k')
-xlabel('Time (s)'); ylabel('LB');
-legend('Model', 'Measurement', 'Data Reconciliation')
+%% Error metrics
+SE_M_LB  = (true_data.LB - measured_data.LB).^2;
+SE_DR_LB = (true_data.LB - LB_DR).^2;
 
-subplot(2,1,2)
-plot(tSol, v.LR, 'c', time, measured_data.LR, 'r', time, LR_DR, 'k')
+SE_M_LR  = (true_data.LR - measured_data.LR).^2;
+SE_DR_LR = (true_data.LR - LR_DR).^2;
+
+MSE_M_LB  = mean(SE_M_LB(:,100:end));
+MSE_DR_LB = mean(SE_DR_LB(:,100:end));
+
+MSE_M_LR  = mean(SE_M_LR(:,100:end));
+MSE_DR_LR = mean(SE_DR_LR(:,100:end));
+
+%% Plot results
+subplot(2,2,1)
+plot(time, true_data.LB, 'c', time, measured_data.LB, 'r', time, LB_DR, 'k')
+xlabel('Time (s)'); ylabel('LB');
+legend('Model', 'Measurement', 'Data Reconciliation', 'Location', 'Best')
+
+subplot(2,2,2)
+plot(time, true_data.LR, 'c', time, measured_data.LR, 'r', time, LR_DR, 'k')
 xlabel('Time (s)'); ylabel('LR');
-legend('Model', 'Measurement', 'Data Reconciliation')
+legend('Model', 'Measurement', 'Data Reconciliation', 'Location', 'Best')
+
+subplot(2,2,3)
+plot(time(100:end,:), SE_M_LB(:,100:end), 'k', time(100:end,:), SE_DR_LB(:,100:end), 'c')
+xlabel('Time (s)'); ylabel('LB');
+legend("Measurement with MSE of "+num2str(MSE_M_LB), "Data Reconciliation with MSE of "+num2str(MSE_DR_LB), "Location", "Best")
+
+subplot(2,2,4)
+plot(time(100:end,:), SE_M_LR(:,100:end), 'k', time(100:end,:), SE_DR_LR(:,100:end), 'c')
+xlabel('Time (s)'); ylabel('LR');
+legend("Measurement with MSE of "+num2str(MSE_M_LR), "Data Reconciliation with MSE of "+num2str(MSE_DR_LR), "Location", "Best")
+
+
+
+
