@@ -6,12 +6,13 @@ clc
 load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
 %% Measurements with Variance
-variance = 0.1
-[measured_data time] = measureReal(v, u, p, tSol, variance);
+variance = 0.1;
+[measured_data, time] = measureReal(v, u, p, tSol, variance);
 
 %% Setting up Matrices
 % Measurement values
 % Liquid Measurements
+measurements_L = zeros(p.N,length(time));
 for i = 1:p.N
     measurements_L(i,:) = measured_data.("L"+num2str(i));
 end
@@ -22,6 +23,7 @@ measurements_LF = measured_data.LF;
 
 % Vapour Measurements
 measurements_V0 = measured_data.V0;
+measurements_V = zeros(p.N,length(time));
 for i = 1:p.N
     measurements_V(i,:) = measured_data.("V"+num2str(i));
 end
@@ -36,7 +38,7 @@ W = eye(13);
 for i = 1:13
     for j = 1:13
         if W(i,j) ~= 0
-            W(i,j) = 0.1;
+            W(i,j) = variance;
         end    
     end
 end
@@ -60,6 +62,22 @@ A = [+1 +0 +0 +0 -1 +0 +0 -1 +0 +0 +0 +0 +0;...
      +0 +0 +0 -1 +0 +0 +1 +0 +0 +0 +1 -1 +0;... 
      +0 +0 +0 +0 +0 -1 -1 +0 +0 +0 +0 +1 +0];
  
+%     LB LR LF 
+Ax = [-1 +0 +0;...
+      +0 +0 +0;...
+      +0 +0 +1;...
+      +0 +0 +0;...
+      +0 +1 +0;...
+      +0 -1 +0];
+
+%     L1 L2 L3 L4 LD V0 V1 V2 V3 V4
+Au = [+1 +0 +0 +0 +0 -1 +0 +0 +0 +0;...
+      -1 +1 +0 +0 +0 +1 -1 +0 +0 +0;... 
+      +0 -1 +1 +0 +0 +0 +1 -1 +0 +0;... 
+      +0 +0 -1 +1 +0 +0 +0 +1 -1 +0;... 
+      +0 +0 +0 -1 +0 +0 +0 +0 +1 -1;... 
+      +0 +0 +0 +0 -1 +0 +0 +0 +0 +1];
+
 y_DR_linear = measurements - W\A'*inv(A*(W\A'))*(A*measurements);
 LB_DR = y_DR_linear(5,:);
 LR_DR = y_DR_linear(7,:);
@@ -79,25 +97,23 @@ MSE_DR_LR = mean(SE_DR_LR(:,100:end));
 
 %% Plot results
 subplot(2,2,1)
-plot(time, true_data.LB, 'c', time, measured_data.LB, 'r', time, LB_DR, 'k')
+plot(time(100:end,:), true_data.LB(:,100:end), 'co', time(100:end,:), measured_data.LB(:,100:end), 'y', time(100:end,:), LB_DR(:,100:end), 'k')
 xlabel('Time (s)'); ylabel('LB');
 legend('Model', 'Measurement', 'Data Reconciliation', 'Location', 'Best')
 
 subplot(2,2,2)
-plot(time, true_data.LR, 'c', time, measured_data.LR, 'r', time, LR_DR, 'k')
+plot(time(100:end,:), true_data.LR(:,100:end), 'co', time(100:end,:), measured_data.LR(:,100:end), 'y', time(100:end,:), LR_DR(:,100:end), 'k')
 xlabel('Time (s)'); ylabel('LR');
 legend('Model', 'Measurement', 'Data Reconciliation', 'Location', 'Best')
 
 subplot(2,2,3)
-plot(time(100:end,:), SE_M_LB(:,100:end), 'k', time(100:end,:), SE_DR_LB(:,100:end), 'c')
+plot(time(100:end,:), SE_M_LB(:,100:end), 'y', time(100:end,:), SE_DR_LB(:,100:end), 'k')
 xlabel('Time (s)'); ylabel('LB');
 legend("Measurement with MSE of "+num2str(MSE_M_LB), "Data Reconciliation with MSE of "+num2str(MSE_DR_LB), "Location", "Best")
 
 subplot(2,2,4)
-plot(time(100:end,:), SE_M_LR(:,100:end), 'k', time(100:end,:), SE_DR_LR(:,100:end), 'c')
+plot(time(100:end,:), SE_M_LR(:,100:end), 'y', time(100:end,:), SE_DR_LR(:,100:end), 'k')
 xlabel('Time (s)'); ylabel('LR');
 legend("Measurement with MSE of "+num2str(MSE_M_LR), "Data Reconciliation with MSE of "+num2str(MSE_DR_LR), "Location", "Best")
-
-
 
 
