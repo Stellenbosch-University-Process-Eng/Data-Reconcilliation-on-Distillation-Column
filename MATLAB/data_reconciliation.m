@@ -6,8 +6,8 @@ clc
 load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
 %% Measurements with Variance
-variance = 0.1;
-[measured_data, time] = measureReal(v, u, p, tSol, variance);
+variance = 0.5;
+[measured_data, time] = measureReal(MM, X, v, u, p, tSol, variance);
 
 %% Setting up Matrices
 % Measurement values
@@ -78,16 +78,16 @@ Au = [+1 +0 +0 +0 +0 -1 +0 +0 +0 +0;...
       +0 +0 +0 -1 +0 +0 +0 +0 +1 -1;... 
       +0 +0 +0 +0 -1 +0 +0 +0 +0 +1];
 
-y_DR_linear = measurements - W\A'*inv(A*(W\A'))*(A*measurements);
+y_DR_linear = measurements - (W\A')*inv(A*(W\A'))*(A*measurements);
 LB_DR = y_DR_linear(5,:);
 LR_DR = y_DR_linear(7,:);
 
 %% Error metrics
-SE_M_LB  = (true_data.LB - measured_data.LB).^2;
-SE_DR_LB = (true_data.LB - LB_DR).^2;
+SE_M_LB  = abs((true_data.LB - measured_data.LB)./true_data.LB)*100;
+SE_DR_LB = abs((true_data.LB - LB_DR)./true_data.LB)*100;
 
-SE_M_LR  = (true_data.LR - measured_data.LR).^2;
-SE_DR_LR = (true_data.LR - LR_DR).^2;
+SE_M_LR  = abs((true_data.LR - measured_data.LR)./true_data.LR)*100;
+SE_DR_LR = abs((true_data.LR - LR_DR)./true_data.LR)*100;
 
 MSE_M_LB  = mean(SE_M_LB(:,100:end));
 MSE_DR_LB = mean(SE_DR_LB(:,100:end));

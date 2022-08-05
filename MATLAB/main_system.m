@@ -43,8 +43,8 @@ tSol = sol.x;
 v = intermediaries(tSol, DV, u, p);
 
 % Change into desired vector format & naming convention
-MM = DV(1:p.N,:)';
-X  = DV(p.N+1:end,:)';
+MM = DV(1:p.N,:);
+X  = DV(p.N+1:end,:);
 tSol = tSol';
 
 %% Plot results
@@ -84,7 +84,7 @@ labelsL{end+1} = "LR";
 legend(labelsL, 'location', 'best')
 
 %% Measure true data 
-true_data = measureTrue(v, u, p, tSol);
+true_data = measureReal(MM, X, v, u, p, tSol, 0);
 
 %% Save data
 save('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'u', 'p')
