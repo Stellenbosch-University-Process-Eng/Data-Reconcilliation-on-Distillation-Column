@@ -1,8 +1,8 @@
-function [measured_data time] = measureReal(MM, X, v, u, p, tSol, input)
+function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
 % This function takes in the generated values of the model and subsequently
-% 'measures' the true values. This is done so that the dimensions of the true
-% values conform to the dimensions of the actual measurements (i.e. the
-% artificially corrupted measurements).
+% 'measures' the true values, i.e artificially corrupts the true data. This
+% is done to mimic real life measurements of process variables, which will
+% inherently contain random errors
 
 %%  Define measurements
     % Liquid measurements
