@@ -18,7 +18,7 @@ load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
 %% Measurements with Variance
 % The function measureReal artificially corrupts the true data
-variance = 0.8;
+variance = 0.5;
 [measured_data, time] = measureReal(MM, X, v, u, p, tSol, variance);
 
 %% Setting up Matrices
@@ -49,7 +49,7 @@ A = [+1 +0 +0 +0 -1 +0 +0 -1 +0 +0 +0 +0 +0;...
      +0 +0 +0 +0 +0 -1 -1 +0 +0 +0 +0 +1 +0];
  
 %% Linear DR - AVM 
-xhat = measurements - (W\A')*inv(A*(W\A'))*(A*measurements);
+xhat = measurements - (W\A')*((A*(W\A'))\(A*measurements));
 LB_avm = xhat(5,:);
 
 %% Linear DR - SVM
@@ -61,11 +61,11 @@ for i = 1:4
 end
 
 %% Error metrics
-mapeM = mean(100*abs((true_data.LB - measured_data.LB)./true_data.LB));
-mape_avm = mean(100*abs((true_data.LB - LB_avm)./true_data.LB));
+mapeM    = mean(100*abs((true_data.LB(:,100:end) - measured_data.LB(:,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - measured_data.LB).^2);
+mape_avm = mean(100*abs((true_data.LB(:,100:end) - LB_avm(:,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - LB_avm).^2);
 mape_svm = zeros(4,1);
 for i = 1:4
-    mape_svm(i,1) = mean(100*abs((true_data.LB - LB_svm(i,:))./true_data.LB)); 
+    mape_svm(i,1) = mean(100*abs((true_data.LB(:,100:end) - LB_svm(i,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - LB_svm(i,:)).^2);
 end
 
 %% Display results
