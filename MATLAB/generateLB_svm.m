@@ -32,12 +32,9 @@ function LB = generateLB_svm(v, measured_data, var)
         Au = L1;
         
         % Compute Projection Matrix
-        [Q, R] = qr(Au);
+        [Q, ~] = qr(Au);
         s = 1;
-        Q1 = Q(:, 1:s);
         Q2 = Q(:, s+1:end);
-        R1 = R(1:s, 1:s);
-        R2 = R(1:s, s+1:end);
         P = Q2';
         
         % Redefine measurement & variance matrix
@@ -45,7 +42,7 @@ function LB = generateLB_svm(v, measured_data, var)
         W = varianceMatrix(12, var);
         
         % Perform data reconcialiation
-        xhat_1 = m - (W*(P*Ax)')*inv((P*Ax)*W*(P*Ax)')*(P*Ax)*m;
+        xhat_1 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));
         LB = xhat_1(4,:);
         
     elseif v == 2
@@ -54,12 +51,9 @@ function LB = generateLB_svm(v, measured_data, var)
         Au = [L1 V4];
 
         % Compute Projection Matrix
-        [Q, R] = qr(Au);
+        [Q, ~] = qr(Au);
         s = 2;
-        Q1 = Q(:, 1:s);
         Q2 = Q(:, s+1:end);
-        R1 = R(1:s, 1:s);
-        R2 = R(1:s, s+1:end);
         P = Q2';
         
         % Redefine measurement matrix
@@ -67,7 +61,7 @@ function LB = generateLB_svm(v, measured_data, var)
         W = varianceMatrix(11, var);
         
         % Perform data reconcialiation
-        xhat_2 = m - (W*(P*Ax)')*inv((P*Ax)*W*(P*Ax)')*(P*Ax)*m;
+        xhat_2 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));
         LB = xhat_2(4,:);
         
     elseif v == 3
@@ -76,12 +70,9 @@ function LB = generateLB_svm(v, measured_data, var)
         Au = [L1 L2 V4];
        
         % Compute Projection Matrix
-        [Q, R] = qr(Au);
+        [Q, ~] = qr(Au);
         s = 3;
-        Q1 = Q(:, 1:s);
         Q2 = Q(:, s+1:end);
-        R1 = R(1:s, 1:s);
-        R2 = R(1:s, s+1:end);
         P = Q2';
         
         % Redefine measurement matrix
@@ -89,7 +80,7 @@ function LB = generateLB_svm(v, measured_data, var)
         W = varianceMatrix(10, var);
         
         % Perform data reconcialiation
-        xhat_3 = m - (W*(P*Ax)')*inv((P*Ax)*W*(P*Ax)')*(P*Ax)*m;
+        xhat_3 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));
         LB = xhat_3(3,:);
         
     elseif v == 4
@@ -98,12 +89,9 @@ function LB = generateLB_svm(v, measured_data, var)
         Au = [L1 L2 V3 V4];
         
         % Compute Projection Matrix
-        [Q, R] = qr(Au);
+        [Q, ~] = qr(Au);
         s = 4;
-        Q1 = Q(:, 1:s);
         Q2 = Q(:, s+1:end);
-        R1 = R(1:s, 1:s);
-        R2 = R(1:s, s+1:end);
         P = Q2';
         
         % Redefine measurement matrix
@@ -111,7 +99,7 @@ function LB = generateLB_svm(v, measured_data, var)
         W = varianceMatrix(9, var);
         
         % Perform data reconcialiation
-        xhat_4 = m - (W*(P*Ax)')*inv((P*Ax)*W*(P*Ax)')*(P*Ax)*m;
+        xhat_4 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));
         LB = xhat_4(3,:);
         
     end
