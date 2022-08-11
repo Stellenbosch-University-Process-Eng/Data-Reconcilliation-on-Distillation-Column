@@ -31,6 +31,9 @@ for i = 1:length(time)
     Xhat(:,i) = fmincon(J, Y(:,i),[],[],[],[],zeros(25,1),[], @nonLinearConstraints);
 end
 
+%% Redefining Measurement Matrix
+% Thus, this will the code required
+
 %% Error Metrics
 XB_non = Xhat(18,:);
 LB_non = Xhat(5,:);
