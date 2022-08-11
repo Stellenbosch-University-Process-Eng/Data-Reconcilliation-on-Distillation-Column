@@ -31,18 +31,25 @@ for i = 1:length(time)
     Xhat(:,i) = fmincon(J, Y(:,i),[],[],[],[],zeros(25,1),[], @nonLinearConstraints);
 end
 
+%% Plot results
 LB_non = Xhat(18,:);
 XB_non = Xhat(18,:);
 LB_non = Xhat(5,:);
 subplot(2,1,1)
 plot(time,true_data.XB,'bo',time,measured_data.XB,'y',time,XB_non,'k')
+title("Molar fraction - Non-linear DR")
+xlabel("Time"); ylabel("XB - Bottoms molar fraction")
+legend('Model','Measurement','Non-linear DR')
 subplot(2,1,2)
 plot(time,true_data.LB,'bo',time,measured_data.LB,'y',time,LB_non,'k')
+title("Liquid molar flowrate - Non-linear DR")
+xlabel("Time"); ylabel("LB - Bottoms molar flowrate")
+legend('Model','Measurement','Non-linear DR')
+
 
  
 
-%%
-
+%% Function
 function [g, f] = nonLinearConstraints(x)
 g = []; % No inequality constraints
 f = [x(1) - x(5) - x(9);...
