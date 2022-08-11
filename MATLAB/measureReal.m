@@ -25,12 +25,19 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
         m.("MM"+num2str(i)) = MM(i,:)';
     end
     
-    % Molar fraction measurements
+    % Molar liquid fraction measurements
     for i = 1:p.N
         m.("X"+num2str(i)) = X(i,:)';
     end
     m.XB = X(5,:)';
     m.XD = X(6,:)';
+    m.XF = u.XF(tSol);
+    
+    % Molar vapour fraction measurements
+    m.Y0 = v.Y0';
+    for i = 1:p.N
+        m.("Y"+num2str(i)) = v.Y(i,:)';
+    end
     
 %% Define measurement fields
     % Liquid fields
@@ -53,12 +60,19 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
         meas.fields{end+1} = "MM"+num2str(i);
     end
     
-    % Molar fraction measurements
+    % Molar liquid fraction measurements
     for i = 1:p.N
         meas.fields{end+1} = "X"+num2str(i);
     end
     meas.fields{end+1} = "XB";
     meas.fields{end+1} = "XD";
+    meas.fields{end+1} = "XF";
+    
+    % Molar vapour fraction fields
+    meas.fields{end+1} = "Y0";
+    for i = 1:p.N
+        meas.fields{end+1} = "Y"+num2str(i);
+    end
 
 %% Define measurement structure
     % Liquid structure
@@ -81,12 +95,19 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
         meas.("MM"+num2str(i)) = struct('func', @(t,m,u,v) m.("MM"+num2str(i)), 'var', input, 'T', 1, 'D', 0);
     end
     
-    % Molar fraction measurements
+    % Molar liquid fraction measurements
     for i = 1:p.N
         meas.("X"+num2str(i)) = struct('func', @(t,m,u,v) m.("X"+num2str(i)), 'var', input, 'T', 1, 'D', 0);
     end
     meas.XB = struct('func', @(t,m,u,v) m.XB, 'var', input, 'T', 1, 'D', 0);
     meas.XD = struct('func', @(t,m,u,v) m.XD, 'var', input, 'T', 1, 'D', 0);
+    meas.XF = struct('func', @(t,m,u,v) m.XF, 'var', input, 'T', 1, 'D', 0);
+    
+    % Molar vapour fraction structure
+    meas.Y0 = struct('func', @(t,m,u,v) m.Y0, 'var', input, 'T', 1, 'D', 0);
+    for i = 1:p.N
+        meas.("Y"+num2str(i)) = struct('func', @(t,m,u,v) m.("Y"+num2str(i)), 'var', input, 'T', 1, 'D', 0);
+    end
     
 %% Call measurement function
     y = measurements(tSol, m, u, v, meas);
@@ -112,11 +133,18 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
         measured_data.("MM"+num2str(i)) = y.("MM"+num2str(i)).Data(:,1:end);
     end
     
-    % Molar fraction
+    % Molar liquid fractions
     for i = 1:p.N
         measured_data.("X"+num2str(i)) = y.("X"+num2str(i)).Data(:,1:end);
     end
     measured_data.XB = y.XB.Data(:,1:end);
     measured_data.XD = y.XD.Data(:,1:end);
+    measured_data.XF = y.XF.Data(:,1:end);
+    
+    % Molar vapour fractions
+    measured_data.Y0 = y.Y0.Data(:,1:end);
+    for i = 1:p.N
+        measured_data.("Y"+num2str(i)) = y.("Y"+num2str(i)).Data(:,1:end);
+    end
 end
 
