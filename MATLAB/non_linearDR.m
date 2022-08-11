@@ -31,15 +31,18 @@ for i = 1:length(time)
     Xhat(:,i) = fmincon(J, Y(:,i),[],[],[],[],zeros(25,1),[], @nonLinearConstraints);
 end
 
-%% Plot results
-LB_non = Xhat(18,:);
+%% Error Metrics
 XB_non = Xhat(18,:);
 LB_non = Xhat(5,:);
+
+mapeM    = mean(100*abs((true_data.XB(:,100:end) - measured_data.XB(:,100:end))./true_data.XB(:,100:end)));
+mape_avm = mean(100*abs((true_data.XB(:,100:end) - XB_non(:,100:end))./true_data.XB(:,100:end)));
+%% Plot results
 subplot(2,1,1)
 plot(time,true_data.XB,'bo',time,measured_data.XB,'y',time,XB_non,'k')
 title("Molar fraction - Non-linear DR")
 xlabel("Time"); ylabel("XB - Bottoms molar fraction")
-legend('Model','Measurement','Non-linear DR')
+legend('Model',"Measurement with MAPE = "+num2str(mapeM)+"%","Non-linear DR with MAPE = "+num2str(mape_avm)+"%")
 subplot(2,1,2)
 plot(time,true_data.LB,'bo',time,measured_data.LB,'y',time,LB_non,'k')
 title("Liquid molar flowrate - Non-linear DR")
