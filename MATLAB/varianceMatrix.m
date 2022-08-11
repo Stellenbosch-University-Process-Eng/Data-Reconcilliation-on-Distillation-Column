@@ -7,7 +7,7 @@ W = eye(a);
 for i = 1:a
     for j = 1:a
         if W(i,j) ~= 0
-            W(i,j) = var;
+            W(i,j) = inv(var.^2);
         end    
     end
 end
