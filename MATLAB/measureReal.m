@@ -138,6 +138,11 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
         measured_data.("X"+num2str(i)) = y.("X"+num2str(i)).Data(:,1:end);
     end
     measured_data.XB = y.XB.Data(:,1:end);
+    for i = 1:length(time)
+        if measured_data.XB(:,i) < 0
+            measured_data.XB(:,i) = 0;
+        end
+    end        
     measured_data.XD = y.XD.Data(:,1:end);
     measured_data.XF = y.XF.Data(:,1:end);
     
@@ -146,5 +151,6 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
     for i = 1:p.N
         measured_data.("Y"+num2str(i)) = y.("Y"+num2str(i)).Data(:,1:end);
     end
+    
 end
 
