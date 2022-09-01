@@ -78,8 +78,8 @@ for i = 1:4
 end
 
 % Density functions
-[fm, xim] = ksdensity(resM(:,100:end))
-[favm, xiavm] = ksdensity(res_avm(:,100:end))
+[fm, xim] = ksdensity(resM(:,100:end));
+[favm, xiavm] = ksdensity(res_avm(:,100:end));
 fsvm = zeros(1,100); xisvm = zeros(1,100);
 for i = 1:4
     [fsvm(i,:), xisvm(i,:)] = ksdensity(res_svm(i,100:end));
@@ -90,7 +90,7 @@ end
 % Line graph               >> disp = 1
 % Histogram                >> disp = 2
 % Probability distribution >> disp = 3
-disp = 3;
+disp = 2;
 
 % Plot results - Line Graph
 if disp == 1
