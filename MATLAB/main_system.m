@@ -10,19 +10,18 @@ t = linspace(0,1000,1000);
 % Need weir height and correct volatility
 
 p.N = 4;        % ~, Number of trays 
-p.alpha = 1.2;  % ~, Relative volatility
+p.alpha = 2.4;  % ~, Relative volatility
 p.yy = 1;       % ~, Activity coefficient 
-p.kw = 15;      % ~, Weir constant
+p.kw = 5;      % ~, Weir constant
 p.lw = 0;       % m, Weir height
 p.pm = 11;        % moles/m^3, Density >> (876 kg/m3 * 1000 g/kg / 78.11 g/mol) / 1000 mol/kmol
 p.A  = 3;       % m^2, Area 
-p.kr = 0.5;     % ~, Reboiler constant
+p.kr = 0.5;     % ~, Reboiler constant -- Heat vaporisation
 
 %% Define exogenous variables
 % Feed variables
 u.LF = @(t) 10 + 0*(t > 500);       % mol/min, Feed liquid molar flowrate
 u.XF = @(t) 0.5 - 0*(t > 300);              % ~, Feed liquid molar fraction 
-u.lw = @(t) 0*(t > 100);
 
 % Desired ratios 
 u.R = @(t) 2.5 + 0*(t > 100);     % ~, Reflux ratio

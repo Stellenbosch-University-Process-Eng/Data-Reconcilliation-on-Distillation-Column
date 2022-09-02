@@ -7,7 +7,7 @@ function v = intermediaries(t, x, u, p)
     
 % Calculate Liquid molar flowrates on each tray
     for n = 1:p.N
-        v.L(n,:) = p.kw*sqrt((MM(n,:)/(p.A*p.pm)) - p.lw).*ones(1,length(u.B(t)));           % mol/min, Liquid molar flowrate - L1:L4
+        v.L(n,:) = p.kw*sqrt(real((MM(n,:)/(p.A*p.pm)) - p.lw)).*ones(1,length(u.B(t)));           % mol/min, Liquid molar flowrate - L1:L4
     end
     
 % Calculate Vapour molar flowrates
@@ -23,9 +23,9 @@ function v = intermediaries(t, x, u, p)
     v.LD = v.LR./u.R(t);                       % mol/min, Liquid molar flowrate - LD
 
 % Calculate Vapour molar flowrates
-    v.Y0(1,:) = (p.alpha*X(p.N+1,:))./(1 + (1-p.alpha)*X(p.N+1,:));    % ~, Vapour molar fraction - Y0  
+    v.Y0(1,:) = (p.alpha*X(p.N+1,:))./(1 + (p.alpha-1)*X(p.N+1,:));    % ~, Vapour molar fraction - Y0  
     for n = 1:p.N
-        v.Y(n,:) = (p.alpha*X(n,:))./(1 + (1-p.alpha)*X(n,:));         % ~, Vapour molar fraction - Y1:Y4
+        v.Y(n,:) = (p.alpha*X(n,:))./(1 + (p.alpha-1)*X(n,:));         % ~, Vapour molar fraction - Y1:Y4
     end
 % Calculate Condenser duty
     v.Qcon(1,:) = v.V(p.N,:);                  % kJ/mol, Condenser heat transfer duty
