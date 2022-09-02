@@ -53,17 +53,6 @@ for i = 1:100
     resM(i,:) = true_data.LB - measured_data.LB;
     res_avm(i,:) = true_data.LB - LB_avm;
 
-    % Density functions
-    [fm(i,:), xim(i,:)] = ksdensity(resM(i,100:end));
-    [favm(i,:), xiavm(i,:)] = ksdensity(res_avm(i,100:end));
-    
-end
-
-subplot(2,1,1)
-plot(variance,mapeDiff,'b')
-xlabel("Variance"); ylabel("mapeDiff")
-legend("mapeDiff")
-title("Difference between measurement MAPE & DR MAPE")
 
 subplot(2,1,2)
 patch([variance fliplr(variance)], [mapeM' fliplr(mape_avm')], 'y')
