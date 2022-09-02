@@ -31,7 +31,7 @@ for i = 1:5
         % Find the non-linear estimates. Use the measurements as initial guess
         % See the help file for fmincon to understand the different required input arguments.
         Xhat(:,j) = fmincon(J, X0,[],[],[],[],zeros(25,1),[], @nonLinearConstraints);
-        X0(index) = Y(:,j);
+        X0(index) = Y(:,j);  
     end
 
     XB(i,:) = Xhat(18,:);

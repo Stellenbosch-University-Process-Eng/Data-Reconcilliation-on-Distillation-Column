@@ -71,7 +71,7 @@ hold on
 plot(variance, mapeM, 'r', variance, mape_avm, 'b')
 hold off
 xlabel("Variance"); ylabel("mapeValue")
-legend("Measurements","DR")
+legend("Diff","Measurements","DR")
 title("Comparison of MAPE values between measurements and DR")
 
 sgtitle("Plots illustrating the effect of DR with increasing variance")
