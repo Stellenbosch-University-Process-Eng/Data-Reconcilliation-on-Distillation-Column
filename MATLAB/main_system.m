@@ -6,19 +6,22 @@ clc
 t = linspace(0,1000,1000);
 
 %% Define Parameters 
+
+% Need weir height and correct volatility
+
 p.N = 4;        % ~, Number of trays 
 p.alpha = 2.4;  % ~, Relative volatility
 p.yy = 1;       % ~, Activity coefficient 
-p.kw = 10;      % ~, Weir constant
+p.kw = 15;      % ~, Weir constant
 p.lw = 0;       % m, Weir height
-p.pm = 5;       % moles/m^3, Density
-p.A  = 1;       % m^2, Area 
-p.kr = 0.5;     % ~, Reboiler constant
+p.pm = 11;        % moles/m^3, Density >> (876 kg/m3 * 1000 g/kg / 78.11 g/mol) / 1000 mol/kmol
+p.A  = 3;       % m^2, Area 
+p.kr = 0.5;     % ~, Reboiler constant -- Heat vaporisation
 
 %% Define exogenous variables
 % Feed variables
-u.LF = @(t) 10 + 0*(t > 300);       % mol/min, Feed liquid molar flowrate
-u.XF = @(t) 0.5 + 0*t;              % ~, Feed liquid molar fraction 
+u.LF = @(t) 10 + 0*(t > 500);       % mol/min, Feed liquid molar flowrate
+u.XF = @(t) 0.5 - 0*(t > 300);              % ~, Feed liquid molar fraction 
 
 % Desired ratios 
 u.R = @(t) 2.5 + 0*(t > 100);     % ~, Reflux ratio
@@ -33,7 +36,7 @@ u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowra
 
 %% Define intial conidtions - Molar Holdup
 % Initial conditions of the molar holdup ODEs
-DV0 = [ones(p.N,1); zeros(p.N+2,1)];
+DV0 = [ones(p.N,1); zeros(6,1)];
 
 %% Simulate ODEs - Molar Holdup
 % This solves the molar holdup ODEs
