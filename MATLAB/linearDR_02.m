@@ -52,9 +52,10 @@ for i = 1:100
     % res - Residules
     resM(i,:) = true_data.LB - measured_data.LB;
     res_avm(i,:) = true_data.LB - LB_avm;
+    
+end
 
-
-subplot(2,1,2)
+subplot(1,1,1)
 patch([variance fliplr(variance)], [mapeM' fliplr(mape_avm')], 'y')
 hold on
 plot(variance, mapeM, 'r', variance, mape_avm, 'b')
