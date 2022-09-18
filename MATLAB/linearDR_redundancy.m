@@ -96,7 +96,7 @@ end
 % Line graph               >> disp = 1
 % Histogram                >> disp = 2
 % Probability distribution >> disp = 3
-disp = 2;
+disp = 3;
 
 % Plot results - Line Graph
 if disp == 1

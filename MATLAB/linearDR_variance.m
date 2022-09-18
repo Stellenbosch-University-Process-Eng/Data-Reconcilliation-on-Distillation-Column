@@ -28,6 +28,7 @@ mape_avm = zeros(100,1);
 mapeDiff = zeros(100,1);
 resM     = zeros(100,1001);
 res_avm  = zeros(100,1001);
+LB_avm   = zeros(100,1001);
 
 for i = 1:100
     [measured_data, time] = measureReal(MM, X, v, u, p, tSol, variance(i));
@@ -52,17 +53,17 @@ for i = 1:100
 
     % Linear DR - AVM 
     xhat = measurements - (W\A')*((A*(W\A'))\(A*measurements));
-    LB_avm = xhat(2,:);
+    LB_avm(i,:) = xhat(2,:);
 
     % Error metrics
     % MAPE - Mean Absolute Percentage Error
     mapeM(i,:)    = mean(100*abs((true_data.LB(:,100:end) - measured_data.LB(:,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - measured_data.LB).^2);
-    mape_avm(i,:) = mean(100*abs((true_data.LB(:,100:end) - LB_avm(:,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - LB_avm).^2);  
+    mape_avm(i,:) = mean(100*abs((true_data.LB(:,100:end) - LB_avm(i,100:end))./true_data.LB(:,100:end))); %mean((true_data.LB - LB_avm).^2);  
     mapeDiff(i,:) = mapeM(i,:) - mape_avm(i,:);
     
     % res - Residules
     resM(i,:) = true_data.LB - measured_data.LB;
-    res_avm(i,:) = true_data.LB - LB_avm;
+    res_avm(i,:) = true_data.LB - LB_avm(i,:);
 end
 
 %% Plot Results
@@ -72,8 +73,9 @@ hold on
 plot(variance, mapeM, 'r', variance, mape_avm, 'b')
 hold off
 xlabel("Variance"); ylabel("mapeValue")
-legend("Diff","Measurements","DR")
+legend("Difference","Measurements","Data Reconciliation")
 title("Comparison of MAPE values between measurements and DR")
-
 sgtitle("Plots illustrating the effect of DR with increasing variance")
 
+%% Save Data
+save('linearDR_data', 'mape_avm', 'mapeM')
