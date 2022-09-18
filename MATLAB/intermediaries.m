@@ -12,9 +12,9 @@ function v = intermediaries(t, x, u, p)
     
 % Calculate Vapour molar flowrates
     v.V0 = (u.B(t)/(1 + u.B(t))) * v.L(1,:);                   % mol/min, Vapour molar flowrate - V0
-    v.V(1,:) = v.V0 + u.Q{1}(t)/p.yy;               % mol/min, Vapour molar flowrate - V1
+    v.V(1,:) = v.V0;               % mol/min, Vapour molar flowrate - V1
     for n = 2:p.N
-        v.V(n,:) = v.V(n-1,:) + u.Q{n}(t)/p.yy;     % mol/min, Vapour molar flowrate - V2:V(p.N)
+        v.V(n,:) = v.V(n-1,:);     % mol/min, Vapour molar flowrate - V2:V(p.N)
     end 
     
 % Calculate other Liquid molar flowrates    

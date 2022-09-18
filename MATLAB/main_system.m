@@ -13,24 +13,20 @@ p.N = 4;        % ~, Number of trays
 p.alpha = 2.4;  % ~, Relative volatility
 p.yy = 1;       % ~, Activity coefficient 
 p.kw = 15;      % ~, Weir constant
-p.lw = 0;       % m, Weir height
-p.pm = 11;        % moles/m^3, Density >> (876 kg/m3 * 1000 g/kg / 78.11 g/mol) / 1000 mol/kmol
-p.A  = 3;       % m^2, Area 
+p.lw = 0.05;    % m, Weir height
+p.pm = 11;      % moles/m^3, Density >> (876 kg/m3 * 1000 g/kg / 78.11 g/mol) / 1000 mol/kmol
+p.A  = 0.5;     % m^2, Area 
 p.kr = 0.5;     % ~, Reboiler constant -- Heat vaporisation
 
 %% Define exogenous variables
 % Feed variables
-u.LF = @(t) 10 - 0*(t > 500);       % mol/min, Feed liquid molar flowrate
-u.XF = @(t) 0.5 - 0*(t > 300);              % ~, Feed liquid molar fraction 
+u.LF = @(t) 10 - 0*(t > 500);       % kmol/min, Feed liquid molar flowrate
+u.XF = @(t) 0.5 - 0*(t > 300);      % ~, Feed liquid molar fraction 
 
 % Desired ratios 
 u.R = @(t) 2.5 + 0*(t > 200) - 0*(t > 600);     % ~, Reflux ratio
-u.B = @(t) 2 + 0*(t > 200) - 0*(t > 600);                 % ~, Boilup ratio
+u.B = @(t) 2 + 0*(t > 200) - 0*(t > 600);       % ~, Boilup ratio
 
-% Heat transfer rates across trays
-for n = 1 : p.N
-    u.Q{n} = @(t) 0 + 0*t;          % kJ/mol, Heat transfer rate for each tray
-end
 
 u.Freb = @(t) 2 + 0*t;              % mol/min, Boiler heating fluid molar flowrate
 
@@ -54,7 +50,7 @@ tSol = tSol';
 % Option 1 == Display results for each variable
 % Option 2 == Display effect of reboiler & reflux ratio on XB & XD
 
-option = 2;
+option = 1;
 
 if option == 1% Plot Molar Holdup
     subplot(5,1,1)
