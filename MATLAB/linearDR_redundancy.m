@@ -34,7 +34,7 @@ measurements = [measured_data.L1; measured_data.LB; measured_data.LD; measured_d
 % measurements could potentially have covariance. However, for
 % simplification, all measurements are set to have the same variance with
 % no covariance between the measurements
-W = varianceMatrix(7, variance); 
+W = varianceMatrix(7, variance);%varianceMatrix(7, variance); 
 
 % The A matrix
 % The System of Equations
@@ -204,7 +204,7 @@ function LB = generateLB(v, measured_data, var)
         % Redefine measurement & variance matrix
         m = [measured_data.LB; measured_data.LD; measured_data.LR;...      % Measurement matrix has to correspond to the
              measured_data.V0; measured_data.V4; measured_data.LF];        % new Ax & Au matrices
-        W = varianceMatrix(6, var);                                        % Variance matrix also has to change
+        W = cov(m');%varianceMatrix(6, var);                                        % Variance matrix also has to change
         
         % Perform data reconcialiation
         xhat_1 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));          % Reconciled values for each variable
@@ -224,7 +224,7 @@ function LB = generateLB(v, measured_data, var)
         % Redefine measurement matrix
         m = [measured_data.LB; measured_data.LD; measured_data.LR;...
              measured_data.V0; measured_data.LF];
-        W = varianceMatrix(5, var);
+        W = cov(m');%varianceMatrix(5, var);
         
         % Perform data reconcialiation
         xhat_2 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));

@@ -38,7 +38,7 @@ for i = 1:100
                     measured_data.V0; measured_data.V1; measured_data.LF];
 
     % Variance Matrix
-    W = varianceMatrix(7, variance(i));
+    W = cov(measurements');%varianceMatrix(7, variance(i));
 
     % The A matrix
     % The System of Equations

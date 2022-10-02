@@ -16,7 +16,6 @@ p.kw = 15;      % ~, Weir constant
 p.lw = 0.05;    % m, Weir height
 p.pm = 11;      % moles/m^3, Density >> (876 kg/m3 * 1000 g/kg / 78.11 g/mol) / 1000 mol/kmol
 p.A  = 0.5;     % m^2, Area 
-p.kr = 0.5;     % ~, Reboiler constant -- Heat vaporisation
 
 %% Define exogenous variables
 % Feed variables

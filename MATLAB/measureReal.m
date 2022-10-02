@@ -138,20 +138,62 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
     for i = 1:p.N
         measured_data.("X"+num2str(i)) = y.("X"+num2str(i)).Data(:,1:end);
     end
-    measured_data.XB = y.XB.Data(:,1:end);
-    for i = 1:length(time)
-        if measured_data.XB(:,i) < 0
-            measured_data.XB(:,i) = 0;
-        end
-    end        
+    measured_data.XB = y.XB.Data(:,1:end);      
     measured_data.XD = y.XD.Data(:,1:end);
     measured_data.XF = y.XF.Data(:,1:end);
+    
+    for i = 1:length(time)
+        
+        for j = 1:p.N
+            if measured_data.("X"+num2str(j))(:,i) < 0
+                measured_data.("X"+num2str(j))(:,i) = 0;
+            elseif measured_data.("X"+num2str(j))(:,i) > 1
+                measured_data.("X"+num2str(j))(:,i) = 1;
+            end
+        end
+            
+        if measured_data.XB(:,i) < 0
+            measured_data.XB(:,i) = 0;
+        elseif measured_data.XB(:,i) > 1
+            measured_data.XB(:,i) = 1;
+        end
+        
+        if measured_data.XD(:,i) < 0
+            measured_data.XD(:,i) = 0;
+        elseif measured_data.XD(:,i) > 1
+            measured_data.XD(:,i) = 1;
+        end
+        
+        if measured_data.XF(:,i) < 0
+            measured_data.XF(:,i) = 0;
+        elseif measured_data.XF(:,i) > 1
+            measured_data.XF(:,i) = 1;
+        end
+    end  
     
     % Molar vapour fractions
     measured_data.Y0 = y.Y0.Data(:,1:end);
     for i = 1:p.N
         measured_data.("Y"+num2str(i)) = y.("Y"+num2str(i)).Data(:,1:end);
     end
+    
+    for i = 1:length(time)
+        
+        for j = 1:p.N
+            if measured_data.("Y"+num2str(j))(:,i) < 0
+                measured_data.("Y"+num2str(j))(:,i) = 0;
+            elseif measured_data.("Y"+num2str(j))(:,i) > 1
+                measured_data.("Y"+num2str(j))(:,i) = 1;
+            end
+        end
+            
+        if measured_data.Y0(:,i) < 0
+            measured_data.Y0(:,i) = 0;
+        elseif measured_data.Y0(:,i) > 1
+            measured_data.Y0(:,i) = 1;
+        end
+
+    end 
     
 end
 
