@@ -38,7 +38,7 @@ for i = 1:100
                     measured_data.V0; measured_data.V1; measured_data.LF];
 
     % Variance Matrix
-    W = cov(measurements');%varianceMatrix(7, variance(i));
+    W = eye(7)*variance(i)^2;
 
     % The A matrix
     % The System of Equations
@@ -75,7 +75,7 @@ hold off
 xlabel("Variance"); ylabel("mapeValue")
 legend("Difference","Measurements","Data Reconciliation")
 title("Comparison of MAPE values between measurements and DR")
-sgtitle("Plots illustrating the effect of DR with increasing variance")
+sgtitle("Plot illustrating the effect of DR with increasing variance")
 
 %% Save Data
 save('linearDR_data', 'mape_avm', 'mapeM')

@@ -34,7 +34,7 @@ measurements = [measured_data.L1; measured_data.LB; measured_data.LD; measured_d
 % measurements could potentially have covariance. However, for
 % simplification, all measurements are set to have the same variance with
 % no covariance between the measurements
-W = varianceMatrix(7, variance);%varianceMatrix(7, variance); 
+W = eye(7)*variance^2; 
 
 % The A matrix
 % The System of Equations
@@ -104,14 +104,14 @@ if disp == 1
     plot(time(100:end,:), true_data.LB(:,100:end), 'co', time(100:end,:), measured_data.LB(:,100:end), 'y', time(100:end,:), LB_avm(:,100:end), 'k')
     title("All Variables Measured")
     xlabel('Time (s)'); ylabel('LB');
-    legend('Model', "Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_avm)+"%", 'Location', 'bestoutside')
+    legend('Model', "Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_avm)+"%", 'Location', 'best')
 
     for i = 1:a
         subplot(a+1,1,i+1)
         plot(time(100:end,:), true_data.LB(:,100:end), 'co', time(100:end,:), measured_data.LB(:,100:end), 'y', time(100:end,:), LB_svm(i,100:end), 'k')
         title("Some Variables Measured: No. Unmeasured = "+num2str(i))
         xlabel('Time (s)'); ylabel('LB');
-        legend('Model', "Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_svm(i,1))+"%", 'Location', 'bestoutside')
+        legend('Model', "Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_svm(i,1))+"%", 'Location', 'best')
     end
     sgtitle("Measurements vs the reconciled values")
     
@@ -204,7 +204,7 @@ function LB = generateLB(v, measured_data, var)
         % Redefine measurement & variance matrix
         m = [measured_data.LB; measured_data.LD; measured_data.LR;...      % Measurement matrix has to correspond to the
              measured_data.V0; measured_data.V4; measured_data.LF];        % new Ax & Au matrices
-        W = cov(m');%varianceMatrix(6, var);                                        % Variance matrix also has to change
+        W = eye(6)*var^2;                                        % Variance matrix also has to change
         
         % Perform data reconcialiation
         xhat_1 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));          % Reconciled values for each variable
@@ -224,7 +224,7 @@ function LB = generateLB(v, measured_data, var)
         % Redefine measurement matrix
         m = [measured_data.LB; measured_data.LD; measured_data.LR;...
              measured_data.V0; measured_data.LF];
-        W = cov(m');%varianceMatrix(5, var);
+        W = eye(5)*var^2;
         
         % Perform data reconcialiation
         xhat_2 = m - (W*(P*Ax)')*(((P*Ax)*W*(P*Ax)')\((P*Ax)*m));

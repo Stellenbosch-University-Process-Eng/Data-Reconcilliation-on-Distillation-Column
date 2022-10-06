@@ -68,11 +68,12 @@ for j = 1:length(alpha)
     end
 
     % Results - GED Performance
-    spec(j)        = sum(H0)/1001;
-    sens(j)        = sum(H1)/1001;
-    type1_error(j) = sum(Type1)/1001;
-    type2_error(j) = sum(Type2)/1001;
-
+    spec(j)        = sum(H0)/(sum(H0) + sum(Type1));
+    sens(j)        = sum(H1)/(sum(H1) + sum(Type2));
+    type1_error(j) = sum(Type1)/(sum(H0) + sum(Type1));
+    type2_error(j) = sum(Type2)/(sum(H1) + sum(Type2));
+    
+    clear H0 H1 Type1 Type2
 end
 
 Performance_Parameter = ["Specificity"; "Sensitivity"; "Type 1 Error"; "Type 2 Error"];
@@ -80,7 +81,24 @@ Performance_Value     = [spec; sens; type1_error; type2_error];
 table(Performance_Parameter, Performance_Value)
 
 % Plot Results
-subplot(2,1,1)
+subplot(2,2,1)
+plot(alpha, spec)
+xlim([0.88 0.99])
+title("Specificity - True Negative")
+
+subplot(2,2,3)
+plot(alpha, sens)
+xlim([0.88 0.99])
+title("Sensitivity - True Positive")
+
+subplot(2,2,2)
 plot(alpha, type1_error)
-subplot(2,1,2)
+xlim([0.88 0.99])
+title("Type 1 Error - False Positive")
+
+subplot(2,2,4)
 plot(alpha, type2_error)
+xlim([0.88 0.99])
+title("Type 2 Error - False Negative")
+
+sgtitle("Global Test GED Method Performance")
