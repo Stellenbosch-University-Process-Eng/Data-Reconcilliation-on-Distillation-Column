@@ -30,7 +30,7 @@ for i = 1:a
     % Set Up Matrices
     v = i-1; X0 = zeros(13,1);
     [Y, index] = measurements_Y(v, measured_data);
-    W = varianceMatrix(length(index), variance);
+    W = cov(Y');
 
     for j = 1:length(time)
         % Weighted objective function given current measurements Y(:,i)

@@ -20,13 +20,13 @@ variance = 0.8;
 % test statistic is larger than x, H0 will be rejected.
 
 % Define confidence interval
-alpha = linspace(0.88,0.99,10);              % alpha >> Level of significance
+alpha = linspace(0.88,0.99,50);              % alpha >> Level of significance
 
 % Define measurements
 y = [measured_data.L1; measured_data.LB; measured_data.LD; measured_data.LR;...    % Data containing no gross erros
      measured_data.V0; measured_data.V1; measured_data.LF];
  
-W = varianceMatrix(7,variance); 
+W = eye(7)*variance.^2; 
 
 %    L1 LB LD LR V0 V4 LF     
 A = [+0 -1 -1 +0 +0 +0 +1;...
@@ -86,12 +86,12 @@ plot(alpha, spec)
 xlim([0.88 0.99])
 title("Specificity - True Negative")
 
-subplot(2,2,3)
+subplot(2,2,2)
 plot(alpha, sens)
 xlim([0.88 0.99])
 title("Sensitivity - True Positive")
 
-subplot(2,2,2)
+subplot(2,2,3)
 plot(alpha, type1_error)
 xlim([0.88 0.99])
 title("Type 1 Error - False Positive")
