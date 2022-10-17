@@ -1,3 +1,6 @@
+%% Submission status
+% Submitted for review - TM Louw
+
 %% Comparison of Linear DR and Non-linear DR
 % This code generates a plot of the MAPE values for the variable LB,
 % generated from linear DR and non-linear DR. This is done for comparison
@@ -10,6 +13,7 @@ load('linearDR_data', 'mape_avm', 'mapeM')
 mape_linearDR    = mape_avm;
 
 %% Plot results
+% Figure 5.3.4
 plot(linspace(0.05,5,100), mape_nlinearDR, 'b', linspace(0.05,5,100), mape_linearDR, 'r')
 legend("Non-linear", "Linear")
 xlabel("Variance"); ylabel("LB - MAPE values for different variances")

@@ -7,7 +7,7 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input, option
 % is done to mimic real life measurements of process variables, which will
 % inherently contain random errors. Note, this function functions exactly
 % the same as measureReal, however, this function allows to measure the
-% flowrates and mole fractions seperately.
+% flowrates and mole fractions seperately. 
 
 %% Choose Variables To Measure
     if option == 1
