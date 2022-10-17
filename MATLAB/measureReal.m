@@ -1,3 +1,6 @@
+%% Submission status
+% Submitted for review - TM Louw
+
 function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
 % This function takes in the generated values of the model and subsequently
 % 'measures' the true values, i.e artificially corrupts the true data. This
@@ -98,16 +101,16 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
     
     % Molar liquid fraction measurements
     for i = 1:p.N
-        meas.("X"+num2str(i)) = struct('func', @(t,m,u,v) m.("X"+num2str(i)), 'var', input, 'T', 1, 'D', 0);
+        meas.("X"+num2str(i)) = struct('func', @(t,m,u,v) m.("X"+num2str(i)), 'var', input/10, 'T', 1, 'D', 0);
     end
-    meas.XB = struct('func', @(t,m,u,v) m.XB, 'var', input, 'T', 1, 'D', 0);
-    meas.XD = struct('func', @(t,m,u,v) m.XD, 'var', input, 'T', 1, 'D', 0);
-    meas.XF = struct('func', @(t,m,u,v) m.XF, 'var', input, 'T', 1, 'D', 0);
+    meas.XB = struct('func', @(t,m,u,v) m.XB, 'var', input/10, 'T', 1, 'D', 0);
+    meas.XD = struct('func', @(t,m,u,v) m.XD, 'var', input/10, 'T', 1, 'D', 0);
+    meas.XF = struct('func', @(t,m,u,v) m.XF, 'var', input/10, 'T', 1, 'D', 0);
     
     % Molar vapour fraction structure
-    meas.Y0 = struct('func', @(t,m,u,v) m.Y0, 'var', input, 'T', 1, 'D', 0);
+    meas.Y0 = struct('func', @(t,m,u,v) m.Y0, 'var', input/10, 'T', 1, 'D', 0);
     for i = 1:p.N
-        meas.("Y"+num2str(i)) = struct('func', @(t,m,u,v) m.("Y"+num2str(i)), 'var', input, 'T', 1, 'D', 0);
+        meas.("Y"+num2str(i)) = struct('func', @(t,m,u,v) m.("Y"+num2str(i)), 'var', input/10, 'T', 1, 'D', 0);
     end
     
 %% Call measurement function

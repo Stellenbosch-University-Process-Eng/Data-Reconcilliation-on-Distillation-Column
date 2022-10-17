@@ -8,7 +8,7 @@ load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 %% Measurements with Variance
 % The function measureReal artificially corrupts the true data, with a
 % specified variance
-variance = 0.8;
+variance = 0.7;
 [measured_data, time] = measureReal(MM, X, v, u, p, tSol, variance);
 
 %% Hypothesis Testing - Chi Square Goodness of Fit test
@@ -20,7 +20,7 @@ variance = 0.8;
 % test statistic is larger than x, H0 will be rejected.
 
 % Define confidence interval
-alpha = linspace(0.88,0.99,50);              % alpha >> Level of significance
+alpha = linspace(0.8,0.99,1000);              % alpha >> Level of significance
 
 % Define measurements
 y = [measured_data.L1; measured_data.LB; measured_data.LD; measured_data.LR;...    % Data containing no gross erros
@@ -42,63 +42,90 @@ df = rank(A);                                       % Degrees of freedom equals 
 % j-loop >> Calculates the GED performance different confidence intervals
 % i-loop >> Calculates the GED performance for specified confidence
 % interval
+for i = 1:500
+    if i < 500
+        y(randi([1 7],1,1),i) = 0;         % Gross Error introduced for a random variable
+    end
+end
+
 for j = 1:length(alpha)
     for i = 1:1001
-        if i < 500
-            y(randi([1 7],1,1),i*2) = 0;         % Gross Error introduced for a random variable
-        end
-
         r = A*y(:,i);                            % Residuals of all variables, at a specified time  
         test_stat      = (r')*(V\r);             % Test statistic - Calculated according Global Test method
         test_criterion = chi2inv(alpha(j),df);   % Test criterion - Evaluated at specified confidence interval
 
         if test_stat < test_criterion            % H0 is accepted
-            if nnz(y(:,i)) < 7                   % Gross error is present
+            if i < 500                           % Gross error is present
                 Type2(i) = 1;                    % Incorrectly accepted H0
             else                                 % Gross error not present
                 H0(i) = 1;                       % Correctly accepted H0
             end
         else                                     % H1 is accepted
-            if nnz(y(:,i)) < 7                   % Gross error is present
+            if i < 500                           % Gross error is present
                 H1(i) = 1;                       % Correctly accepts H1
             else                                 % Gross error not present
                 Type1(i) = 1;                    % Incorrectly accepted H1
             end
         end
     end
-
+    
     % Results - GED Performance
-    spec(j)        = sum(H0)/(sum(H0) + sum(Type1));
-    sens(j)        = sum(H1)/(sum(H1) + sum(Type2));
-    type1_error(j) = sum(Type1)/(sum(H0) + sum(Type1));
-    type2_error(j) = sum(Type2)/(sum(H1) + sum(Type2));
+    
+    test1 = exist("Type1");
+    test2 = exist("Type2");
+        
+    if test1 == 0
+        spec(j)        = sum(H0)/(sum(H0) + 0);
+        sens(j)        = sum(H1)/(sum(H1) + sum(Type2));
+        type1_error(j) = 0;
+        type2_error(j) = sum(Type2)/(sum(H1) + sum(Type2));
+        
+    elseif test2 == 0
+        spec(j)        = sum(H0)/(sum(H0) + sum(Type1));
+        sens(j)        = sum(H1)/(sum(H1) + 0);
+        type1_error(j) = sum(Type1)/(sum(H0) + sum(Type1));
+        type2_error(j) = 0;
+        
+    else
+        spec(j)        = sum(H0)/(sum(H0) + sum(Type1));
+        sens(j)        = sum(H1)/(sum(H1) + sum(Type2));
+        type1_error(j) = sum(Type1)/(sum(H0) + sum(Type1));
+        type2_error(j) = sum(Type2)/(sum(H1) + sum(Type2));
+        
+    end
     
     clear H0 H1 Type1 Type2
 end
 
-Performance_Parameter = ["Specificity"; "Sensitivity"; "Type 1 Error"; "Type 2 Error"];
-Performance_Value     = [spec; sens; type1_error; type2_error];
-table(Performance_Parameter, Performance_Value)
+disp = 2
 
-% Plot Results
-subplot(2,2,1)
-plot(alpha, spec)
-xlim([0.88 0.99])
-title("Specificity - True Negative")
+if disp == 1
 
-subplot(2,2,2)
-plot(alpha, sens)
-xlim([0.88 0.99])
-title("Sensitivity - True Positive")
+    % Plot Results
+    subplot(2,2,1)
+    plot(alpha, spec)
+    xlim([0.8 0.99])
+    title("Specificity - True Negative")
 
-subplot(2,2,3)
-plot(alpha, type1_error)
-xlim([0.88 0.99])
-title("Type 1 Error - False Positive")
+    subplot(2,2,2)
+    plot(alpha, sens)
+    xlim([0.8 0.99])
+    title("Sensitivity - True Positive")
 
-subplot(2,2,4)
-plot(alpha, type2_error)
-xlim([0.88 0.99])
-title("Type 2 Error - False Negative")
+    subplot(2,2,3)
+    plot(alpha, type1_error)
+    xlim([0.8 0.99])
+    title("Type 1 Error - False Positive")
 
-sgtitle("Global Test GED Method Performance")
+    subplot(2,2,4)
+    plot(alpha, type2_error)
+    xlim([0.8 0.99])
+    title("Type 2 Error - False Negative")
+
+    sgtitle("Global Test GED Method Performance")
+    
+else
+    
+    plot(sens, spec)
+    
+end
