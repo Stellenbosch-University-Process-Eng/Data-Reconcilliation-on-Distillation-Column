@@ -11,7 +11,6 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input, option
 
 %% Choose Variables To Measure
     if option == 1
-   
         % Define measurements
         % Liquid measurements
         for i = 1:p.N
