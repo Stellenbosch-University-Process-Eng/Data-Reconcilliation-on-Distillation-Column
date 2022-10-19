@@ -8,7 +8,7 @@ load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 %% Measurements with Variance
 % The function measureReal artificially corrupts the true data, with a
 % specified variance
-variance = 0.7;
+variance = 0.8;
 [measured_data, time] = measureReal(MM, X, v, u, p, tSol, variance);
 
 %% Hypothesis Testing - Chi Square Goodness of Fit test
@@ -97,32 +97,36 @@ for j = 1:length(alpha)
     clear H0 H1 Type1 Type2
 end
 
-disp = 2
+disp = 1
 
 if disp == 1
 
     % Plot Results
     subplot(2,2,1)
     plot(alpha, spec)
+    xlabel("Confidence interval"), ylabel("Specificity")
     xlim([0.8 0.99])
     title("Specificity - True Negative")
 
     subplot(2,2,2)
     plot(alpha, sens)
+    xlabel("Confidence interval"), ylabel("Sensitivity")
     xlim([0.8 0.99])
     title("Sensitivity - True Positive")
 
     subplot(2,2,3)
     plot(alpha, type1_error)
+    xlabel("Confidence interval"), ylabel("Type I")
     xlim([0.8 0.99])
     title("Type 1 Error - False Positive")
 
     subplot(2,2,4)
     plot(alpha, type2_error)
+    xlabel("Confidence interval"), ylabel("Type II")
     xlim([0.8 0.99])
     title("Type 2 Error - False Negative")
 
-    sgtitle("Global Test GED Method Performance")
+    sgtitle("Global Test GED method performance")
     
 else
     

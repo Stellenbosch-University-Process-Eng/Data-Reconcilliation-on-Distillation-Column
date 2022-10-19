@@ -17,7 +17,7 @@ load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 %% Measurements with Variance
 % The function measureReal artificially corrupts the true data
 a = 100;                             % Amount of iterations
-variance = linspace(0.0005,0.5,a);   % Variance values
+variance = linspace(0.05,1,a);   % Variance values
 upperBound = [Inf(7,1); ones(6,1)];  % Upper bounds - flowrates can technically be infinite whilst fractions can be a maximum of 1
 lowerBound = zeros(13,1);            % Lower bounds - flowrates and fractions can't be below zero
 
@@ -69,13 +69,20 @@ hold on
 plot(variance, mapeM(:,1)', 'r', variance, mape_avm(:,1)', 'b')
 hold off
 xlabel("Variance"); ylabel("mapeValue - XB")
+xlim([0.05 1])
 legend("Difference","Measurements","Data Reconciliation")
 title("Comparison of MAPE values between measurements and DR - XB")
 
+mapediff = mapeM(:,1)-mape_avm(:,1)
+
+gradient1 = (mapediff(25,1)-mapediff(1,1))/(variance(25) - variance(1))
+gradient2 = (mapediff(50,1)-mapediff(25,1))/(variance(50) - variance(25))
+gradient3 = (mapediff(75,1)-mapediff(50,1))/(variance(75) - variance(50))
+gradient4 = (mapediff(100,1)-mapediff(75,1))/(variance(100) - variance(75))
 % Table 5.3.2
-NumberUnmeasuredVariables = ["0.005";"1";"3";"0.5"];
-MAPE = [mapeM(1)-mape_avm(1); mapeM(21)-mape_avm(21); mapeM(61)-mape_avm(61); mapeM(end)-mape_avm(end)];
-table(NumberUnmeasuredVariables, MAPE)
+GradientName = ["1st Quarter";"2nd Quarter";"3rd Quarter";"4th Quarter"];
+mapeGradient = [gradient1; gradient2; gradient3; gradient4];
+table(GradientName, mapeGradient)
 
 %% Save Data
 % This data will be used in the comparison file 
