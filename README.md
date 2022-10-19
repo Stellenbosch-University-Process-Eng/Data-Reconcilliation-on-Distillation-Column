@@ -48,8 +48,8 @@ This is the repository for my Final Year Project. This read me file explains how
 % This script performs GED with the global test method for the linear case. 
 % It evaluates the effect of the confidence interval on the following: 
 % >> Specificity & sensitvity
-
-***7. GED_nonLinear == Confidence Interval analysis*** 
-% This script performs GED with the global test method for the non-linear case.
-% It evaluates the effect of the confidence interval on the following: 
+  
+***7. GED_nonLinear == Confidence Interval analysis***    
+% This script performs GED with the global test method for the non-linear case.   
+% It evaluates the effect of the confidence interval on the following:  
 % >> Specificity & sensitvity
