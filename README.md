@@ -1,7 +1,7 @@
 # FYP478 - An investigation of Data Reconciliation & Gross Error Detection
 
-*Ewan Hickling, Tobi Louw*
-
+*by*  
+*Ewan Hickling, Tobi Louw*  
 *Department of Process Engineering, Stellenbosch University*
 
 ***1. main_system == Model of binary distillation column***  
