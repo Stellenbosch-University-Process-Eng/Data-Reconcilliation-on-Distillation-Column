@@ -1,5 +1,10 @@
-# FYP478 - Data Reconciliation & Gross Error Detection
-This is the repository for my Final Year Project. This read me file explains how to navigate through the repository.
+# FYP478 - An investigation of Data Reconciliation & Gross Error Detection
+
+
+*completed by Ewan Hickling*  
+*supervised by Tobi Louw*  
+
+*Department of Process Engineering, Stellenbosch University*
 
 ***1. main_system == Model of binary distillation column***  
 % This script simulates a benzene/toulene binary distillation column. It generates data that is used to test linear & non-linear data reconciliation.  
