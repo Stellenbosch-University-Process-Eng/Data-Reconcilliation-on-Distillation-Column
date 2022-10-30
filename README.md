@@ -1,7 +1,7 @@
 # FYP478 - An investigation of Data Reconciliation & Gross Error Detection
 
 
-*completed by Ewan Hicklin*  
+*completed by Ewan Hickling*  
 *supervised by Tobi Louw*  
 
 *Department of Process Engineering, Stellenbosch University*
