@@ -145,25 +145,21 @@ end
 % Plot results - Density Function
 % Figure 5.2.3
 if disp == 3
-    subplot(a+1,1,1)
-    plot(xim, fm, 'y', xiavm, favm, 'b')
-    title("All Variables Measured")
+    plot(xim, fm, 'k', xiavm, favm, 'r')
     xlabel('LB - Residuals'); ylabel('Probability');
     xlim([-1.5 1.5]);
-    legend("Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_avm)+"%", 'Location', 'Best')
+    hold on
     for i = 1:a
-        subplot(a+1,1,i+1)
-        plot(xim, fm, 'y', xisvm(i,:), fsvm(i,:), 'b')
         if i == 1
-            title("Some Variables Measured: No. Unmeasured = "+num2str(i)+" >> L1")
+            plot(xisvm(i,:), fsvm(i,:), 'b')
         elseif i == 2
-            title("Some Variables Measured: No. Unmeasured = "+num2str(i)+" >> L1 & V4")
+            plot(xisvm(i,:), fsvm(i,:), 'g')
         end        
-        xlabel('LB - Residuals'); ylabel('Probablity');
-        xlim([-1.5 1.5]);
-        legend("Measurement with MAPE = "+num2str(mapeM)+"%", "Data Reconciliation with MAPE = "+num2str(mape_svm(i))+"%", 'Location', 'Best')
     end
+    legend("Measurement >> MAPE = "+num2str(mapeM)+"%", "DR - AVM >> MAPE = "+num2str(mape_avm)+"%",...
+           "DR - L1 removed >> MAPE = "+num2str(mape_svm(1))+"%", "DR - L1 + V4 removed >> MAPE = "+num2str(mape_svm(2))+"%",'Location', 'Best')
     sgtitle("Probability distributions of the residuals of LB for the measurements & the reconciled values")
+    hold off
 end
 
 % Display MAPE values in Table
