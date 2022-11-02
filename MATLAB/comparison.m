@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 %% Comparison of Linear DR and Non-linear DR
 % This code generates a plot of the MAPE values for the variable LB,
 % generated from linear DR and non-linear DR. This is done for comparison

@@ -1,7 +1,3 @@
-%% Initialise
-clear
-clc
-
 %% Load data
 load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
@@ -97,7 +93,7 @@ for j = 1:length(alpha)
     clear H0 H1 Type1 Type2
 end
 
-disp = 1
+disp = 1;
 
 if disp == 1
 
@@ -106,13 +102,13 @@ if disp == 1
     plot(alpha, spec)
     xlabel("Confidence interval"), ylabel("Specificity")
     xlim([0.8 0.99])
-    title("Specificity - True Negative")
+    title("Specificity")
 
     subplot(2,2,2)
     plot(alpha, sens)
     xlabel("Confidence interval"), ylabel("Sensitivity")
     xlim([0.8 0.99])
-    title("Sensitivity - True Positive")
+    title("Sensitivity")
 
     subplot(2,2,3)
     plot(alpha, type1_error)
@@ -126,7 +122,7 @@ if disp == 1
     xlim([0.8 0.99])
     title("Type 2 Error - False Negative")
 
-    sgtitle("Global Test GED method performance")
+    sgtitle("Global Test GED method performance - Linear System")
     
 else
     

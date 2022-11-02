@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 function y = measurements(t, m, u, vM, meas)
 % This function uses process variables (t, x, u, v) as inputs, as well as a structure
 % describing the nature of the measurements, to generate a set of measured

@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 function v = intermediaries(t, x, u, p)
 % This fucntion calcuates the intermediaries for the molar holdup ODEs
 

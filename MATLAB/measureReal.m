@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input)
 % This function takes in the generated values of the model and subsequently
 % 'measures' the true values, i.e artificially corrupts the true data. This

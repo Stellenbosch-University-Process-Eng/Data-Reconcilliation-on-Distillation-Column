@@ -72,11 +72,20 @@ end
 % res - Residules
 % The residules are used for the histogram plots & and the probability
 % distribution plots
-resM = true_data.LB - measured_dataFlow.LB;                         % Residuals for measurements
-res_avm = true_data.LB - LB_avm;                                    % Residuals for reconciled data for AVM
+resM  = true_data.LB - measured_dataFlow.LB;                         % Residuals for measurements
+meanM = mean(resM);                                                  % Mean of residuals for measurments
+varM  = var(resM);                                                   % Variance of residuals for measurments
+res_avm  = true_data.LB - LB_avm;                                    % Residuals for reconciled data for AVM
+mean_avm = mean(res_avm);                                            % Mean of residuals for AVM
+var_avm  = var(res_avm);                                             % Variance of residuals for AVM
+
 res_svm = zeros(a,1001);
+mean_svm = zeros(2,1);
+var_svm  = zeros(2,1);
 for i = 1:a
-    res_svm(i,:) = true_data.LB - LB_svm(i,:);                      % Residual for reconciled data for SVM
+    res_svm(i,:)  = true_data.LB - LB_svm(i,:);                      % Residual for reconciled data for SVM
+    mean_svm(i,1) = mean(res_svm(i,:));                              % Mean of residuals for SVM
+    var_svm(i,1)  = var(res_svm(i,:));                               % Variance of residuals for SVM
 end
 
 % Density functions
@@ -92,7 +101,7 @@ end
 % Line graph               >> disp = 1
 % Histogram                >> disp = 2
 % Probability distribution >> disp = 3
-disp = 3;
+disp = 2;
 
 % Plot results - Line Graph
 % Figure 5.2.1
@@ -162,11 +171,19 @@ if disp == 3
     hold off
 end
 
-% Display MAPE values in Table
+% Display Summary statistics of Residuals
 % Table 5.2.1
+NumberUnmeasuredVariables = ["M";"0";"1";"2"];
+MEAN = [meanM; mean_avm; mean_svm];
+VAR  = [varM; var_avm; var_svm];
+table(NumberUnmeasuredVariables, MEAN, VAR)
+
+% Display MAPE values in Table
+% Table 5.2.2
 NumberUnmeasuredVariables = ["M";"0";"1";"2"];
 MAPE = [mapeM; mape_avm; mape_svm];
 table(NumberUnmeasuredVariables, MAPE)
+
 
 function LB = generateLB(v, measured_dataFlow, variance)
 % This function generates the reconciled estimates of the variable LB based

@@ -1,7 +1,3 @@
-%% Initialise
-clear
-clc
-
 %% Load data
 load('true_data', 'MM', 'X', 'tSol', 'true_data', 'v', 'p', 'u')
 
@@ -21,7 +17,7 @@ variance = 0.8;
 % test statistic is larger than x, H0 will be rejected.
 
 % Define confidence interval
-alpha = linspace(0.8,0.99,50);              % alpha >> Level of significance
+alpha = linspace(0.8,0.99,1000);              % alpha >> Level of significance
 
 % Define measurements
 y = [measured_dataFlow.L1; measured_dataFlow.LB; measured_dataFlow.LD; measured_dataFlow.LR;...    % Data containing no gross erros
@@ -112,13 +108,13 @@ subplot(2,2,1)
 plot(alpha, spec)
 xlabel("Confidence interval"), ylabel("Specificity")
 xlim([0.8 0.99])
-title("Specificity - True Negative")
+title("Specificity")
 
 subplot(2,2,2)
 plot(alpha, sens)
 xlabel("Confidence interval"), ylabel("Sensitivity")
 xlim([0.8 0.99])
-title("Sensitivity - True Positive")
+title("Sensitivity")
 
 subplot(2,2,3)
 plot(alpha, type1_error)
@@ -132,4 +128,4 @@ xlabel("Confidence interval"), ylabel("Type II")
 xlim([0.8 0.99])
 title("Type 2 Error - False Negative")
 
-sgtitle("Global Test GED Method Performance")
+sgtitle("Global Test GED Method Performance - Non-linear System")

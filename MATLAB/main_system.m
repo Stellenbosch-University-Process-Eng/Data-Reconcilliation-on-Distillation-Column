@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 %% Model - Binary Distillation Column
 % This is the main code that simulates a binary distillation column.
 % Specifically a benzene/toulene distillation column with parameters and

@@ -1,6 +1,3 @@
-%% Submission status
-% Submitted for review - TM Louw
-
 function dxdt = simulate_ODEs(t, x, u, p)
 % This fucntion simulates the molar holdup ODEs
 
