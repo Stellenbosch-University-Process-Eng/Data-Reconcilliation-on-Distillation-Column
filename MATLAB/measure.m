@@ -6,7 +6,6 @@ function [measured_data, time] = measureReal(MM, X, v, u, p, tSol, input, option
 % the same as measureReal, however, this function allows to measure the
 % flowrates and mole fractions seperately. 
 
-
 %% Choose Variables To Measure
     if option == 1
         % Define measurements
